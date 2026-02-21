@@ -1,0 +1,1 @@
+mpirun -np 32 fitMPI -c rhoIsoAmp.cfg -m 100000 -r 10

@@ -1,0 +1,4 @@
+squeue -u $USERID
+scontrol show job $JOBID
+scontrol show node $NODEID
+sacct -j $JOBID --format=JobID%20,State%12,ExitCode%10,Elapsed%12,MaxRSS%12,AveRSS%12,StdOut%110

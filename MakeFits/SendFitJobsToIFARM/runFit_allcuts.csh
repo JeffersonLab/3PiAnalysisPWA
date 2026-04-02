@@ -40,8 +40,7 @@ source $argEnv
 
 # copy scripts to working directory
 cp ${argCodeDir}/process_allcuts.py .
-cp ${argCodeDir}/template_rhoIsoAmp.cfg .
-
+cp ${argCodeDir}/template_rhoIso_f2Iso_amp.cfg .
 
 # copy parameter seeds for likelihood scan or bootstrap
 #cp $argParamSeeds seed.txt
@@ -63,8 +62,9 @@ echo " ${argNumRand}  ${argPrecision}  ${argDataDir}  ${argMCphspDir}  ${argFitR
 python process_allcuts.py $argNumRand  $argPrecision  $argDataDir  $argMCphspDir  $argFitResDir  $argLinksDir  $argRunRange  $argtLow $argtHigh  $argM3PiLow  $argM3PiHigh  $argM2PiLow  $argM2PiHigh
 
 
-# cleanup auxiliary scripts
-rm template_rhoIsoAmp.cfg
+# cleanup auxiliary scripts and move root files
+rm template_rhoIso_f2Iso_amp.cfg
+mv isops_histos*.root  ../.
 
 
 ls -lhtr

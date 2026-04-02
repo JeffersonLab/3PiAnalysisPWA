@@ -32,28 +32,48 @@ int main( int argc, char* argv[] ){
   FlatWave.push_back( "Flat" );
   
   vector<string> ZeroMinusWaves;
-  ZeroMinusWaves.push_back( "0-P" );
+  ZeroMinusWaves.push_back( "rhoIso_0-P" );
 
   vector<string> OnePlusWaves;
-  OnePlusWaves.push_back( "1+S-" );
-  OnePlusWaves.push_back( "1+S0" );
-  OnePlusWaves.push_back( "1+S+" );
-  OnePlusWaves.push_back( "1+D-" );
-  OnePlusWaves.push_back( "1+D0" );
-  OnePlusWaves.push_back( "1+D+" );
+  OnePlusWaves.push_back( "rhoIso_1+S-" );
+  OnePlusWaves.push_back( "rhoIso_1+S0" );
+  OnePlusWaves.push_back( "rhoIso_1+S+" );
+  OnePlusWaves.push_back( "rhoIso_1+D-" );
+  OnePlusWaves.push_back( "rhoIso_1+D0" );
+  OnePlusWaves.push_back( "rhoIso_1+D+" );
 
+  OnePlusWaves.push_back( "f2Iso_1+P-" );
+  OnePlusWaves.push_back( "f2Iso_1+P0" );
+  OnePlusWaves.push_back( "f2Iso_1+P+" );
+
+  
   vector<string> TwoPlusWaves;
-  TwoPlusWaves.push_back( "2+D--" );
-  TwoPlusWaves.push_back( "2+D-" );
-  TwoPlusWaves.push_back( "2+D0" );
-  TwoPlusWaves.push_back( "2+D+" );
-  TwoPlusWaves.push_back( "2+D++" );
+  TwoPlusWaves.push_back( "rhoIso_2+D--" );
+  TwoPlusWaves.push_back( "rhoIso_2+D-" );
+  TwoPlusWaves.push_back( "rhoIso_2+D0" );
+  TwoPlusWaves.push_back( "rhoIso_2+D+" );
+  TwoPlusWaves.push_back( "rhoIso_2+D++" );
 
+  //  TwoPlusWaves.push_back( "f2Iso_2+P--" );
+  //  TwoPlusWaves.push_back( "f2Iso_2+P-" );
+  //  TwoPlusWaves.push_back( "f2Iso_2+P0" );
+  //  TwoPlusWaves.push_back( "f2Iso_2+P+" );
+  //  TwoPlusWaves.push_back( "f2Iso_2+P++" );
+
+  vector<string> TwoMinusWaves;
+  TwoMinusWaves.push_back( "f2Iso_2-S--" );
+  TwoMinusWaves.push_back( "f2Iso_2-S-" );
+  TwoMinusWaves.push_back( "f2Iso_2-S0" );
+  TwoMinusWaves.push_back( "f2Iso_2-S+" );
+  TwoMinusWaves.push_back( "f2Iso_2-S++" );
+  
+  
   
   vector<string> allWaves = FlatWave;
   allWaves.insert(allWaves.end(), ZeroMinusWaves.begin(), ZeroMinusWaves.end());
   allWaves.insert(allWaves.end(), OnePlusWaves.begin(), OnePlusWaves.end());
   allWaves.insert(allWaves.end(), TwoPlusWaves.begin(), TwoPlusWaves.end());
+  allWaves.insert(allWaves.end(), TwoMinusWaves.begin(), TwoMinusWaves.end());
 
   
   
@@ -92,7 +112,8 @@ int main( int argc, char* argv[] ){
     pair< double, double > evtsObserved = results.intensity( thisAmps, false );
     pair< double, double > evtsCorrected = results.intensity( thisAmps );
 
-    cout << "   " << *itr << "\t:  " << evtsCorrected.first << " +/- " << evtsCorrected.second << "  ("
+    if (evtsCorrected.first/results.intensity().first >= 0.01)
+      cout << "   " << *itr << "\t:  " << evtsCorrected.first << " +/- " << evtsCorrected.second << "  ("
 	 << evtsCorrected.first/results.intensity().first << ") ["
 	 << evtsObserved.first/evtsCorrected.first << "]" << endl;
   }
@@ -144,35 +165,23 @@ int main( int argc, char* argv[] ){
 	 << TwoPlusObserved.first/TwoPlusCorrected.first << "]" << endl;
 
 
-  // get the list of full names of all the 0^{-}, 1^{+} and 2^{+} configurations and add
-  // them to the full list of all 0-, 1+ & 2+ amplitudes  
-
-   vector< string > fullZeroMinusOnePlusTwoPlusNames;
-  for( auto itr = ZeroMinusWaves.begin(); itr != ZeroMinusWaves.end(); ++itr ){
+  // get the list of full names for each m=-2,-1,0,1,2 projection of the 2^{+} configuration and then add                                                                                                    
+  // them to the full list of all 2+ amplitudes   
+   vector< string > fullTwoMinusNames;
+  for( auto itr = TwoMinusWaves.begin(); itr != TwoMinusWaves.end(); ++itr ){
     // get the list of all amplitudes across sums and reactions
     vector< string > thisAmps = namesFromAmpInfo( cfgInfo->amplitudeList( "", "", *itr ) );
-    fullZeroMinusOnePlusTwoPlusNames.insert( fullZeroMinusOnePlusTwoPlusNames.end(), thisAmps.begin(), thisAmps.end() );
-  }
-   for( auto itr = OnePlusWaves.begin(); itr != OnePlusWaves.end(); ++itr ){
-    // get the list of all amplitudes across sums and reactions
-    vector< string > thisAmps = namesFromAmpInfo( cfgInfo->amplitudeList( "", "", *itr ) );
-    fullZeroMinusOnePlusTwoPlusNames.insert( fullZeroMinusOnePlusTwoPlusNames.end(), thisAmps.begin(), thisAmps.end() );
-  }
-  for( auto itr = TwoPlusWaves.begin(); itr != TwoPlusWaves.end(); ++itr ){
-    // get the list of all amplitudes across sums and reactions
-    vector< string > thisAmps = namesFromAmpInfo( cfgInfo->amplitudeList( "", "", *itr ) );
-    fullZeroMinusOnePlusTwoPlusNames.insert( fullZeroMinusOnePlusTwoPlusNames.end(), thisAmps.begin(), thisAmps.end() );
+    fullTwoMinusNames.insert( fullTwoMinusNames.end(), thisAmps.begin(), thisAmps.end() );
   }
   
-
   
   // now print out:
-   pair< double, double > ZeroMinusOnePlusTwoPlusObserved = results.intensity( fullZeroMinusOnePlusTwoPlusNames, false );
-   pair< double, double > ZeroMinusOnePlusTwoPlusCorrected = results.intensity( fullZeroMinusOnePlusTwoPlusNames );
+   pair< double, double > TwoMinusObserved = results.intensity( fullTwoMinusNames, false );
+   pair< double, double > TwoMinusCorrected = results.intensity( fullTwoMinusNames );
 
-   cout << "     ALL (0^{-},1^{+},2^{+})\t:  " <<  ZeroMinusOnePlusTwoPlusCorrected.first << " +/- " << ZeroMinusOnePlusTwoPlusCorrected.second << "  ("
-	 << ZeroMinusOnePlusTwoPlusCorrected.first/results.intensity().first << ") ["
-	 << ZeroMinusOnePlusTwoPlusObserved.first/ZeroMinusOnePlusTwoPlusCorrected.first << "]" << endl;
+   cout << "     ALL 2^{-}\t:  " <<  TwoMinusCorrected.first << " +/- " << TwoMinusCorrected.second << "  ("
+	 << TwoMinusCorrected.first/results.intensity().first << ") ["
+	 << TwoMinusObserved.first/TwoMinusCorrected.first << "]" << endl;
 
 
    

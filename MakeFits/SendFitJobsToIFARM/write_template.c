@@ -1,0 +1,212 @@
+#include <cstdio>
+#include <cstring>
+#include <string>
+#include "def_template.h"
+
+
+
+//Define set of reactions and related constants
+const int NBEAMTIMES = 2;
+const char *subreaction[NBEAMTIMES][4] = {{"Spring2017_PARA_0","Spring2017_PERP_45","Spring2017_PERP_90","Spring2017_PARA_135"},{"Spring2018_PARA_0","Spring2018_PERP_45","Spring2018_PERP_90","Spring2018_PARA_135"}};
+const char *link[NBEAMTIMES][4] = {{"30274_31057_PARA_0","30274_31057_PERP_45","30274_31057_PERP_90","30274_31057_PARA_135"},{"40856_42559_PARA_0","40856_42559_PERP_45","40856_42559_PERP_90","40856_42559_PARA_135"}};
+const char *link_thrown[NBEAMTIMES] = {"30274_31057","40856_42559"};
+
+float polVal[NBEAMTIMES][4] = {{0.3537,0.3484,0.3472,0.3512},{0.3458,0.3416,0.3448,0.3597}};
+float polAng[NBEAMTIMES][4] = {{1.8,47.9,94.5,138.4},{4.1,48.5,94.2,137.6}};
+
+
+//Define set of waves and initial values for each wave's intensity and phase
+const int NTERMS = 17;
+const char *pwterm[NTERMS] = {"rhoIso_0-P","rhoIso_1+S-","rhoIso_1+S0","rhoIso_1+S+","rhoIso_1+D-","rhoIso_1+D0","rhoIso_1+D+","rhoIso_2+D--","rhoIso_2+D-","rhoIso_2+D0","rhoIso_2+D+","rhoIso_2+D++","f2Iso_2-S--","f2Iso_2-S-","f2Iso_2-S0","f2Iso_2-S+","f2Iso_2-S++"};
+int signature[NTERMS][4] = {{1,0,0,1},{1,1,-1,0},{1,1,0,0},{1,1,1,0},{1,1,-1,2},{1,1,0,2},{1,1,1,2},{1,2,-2,2},{1,2,-1,2},{1,2,0,2},{1,2,1,2},{1,2,2,2},{2,2,-2,0},{2,2,-1,0},{2,2,0,0},{2,2,1,0},{2,2,2,0}};
+const char *pwname[NTERMS] = {"rhoIso: spin 0 parity -1","rhoIso: spin 0 parity +1","","","","","","rhoIso: spin 2 parity +1","","","","","f2Iso: spin2 parity -1","","","",""};
+const char *bwtype[NTERMS] = {"rho","rho","rho","rho","rho","rho","rho","rho","rho","rho","rho","rho","f2","f2","f2","f2","f2"};
+
+
+float initialpoint[NTERMS][4] = {{1117.,0.,-1846.,0.},{1949.,-1873.,-1156.,35.},{1555.,-265.,-421.,-1430.},{1066.,762.,142.,1013.},{950.,-1131.,1146.,-866.},{437.,-676.,135.,-1000.},{1430.,-27.,-93.,-108.},{-209.,434.,-142.,-110.},{-1663.,-171.,1573.,819.},{540.,1211.,-354.,1801.},{403.,173.,156.,-328.},{-661.,-657.,-819.,264.},{100.,100.,100.,100.},{100.,100.,100.,100.},{100.,100.,100.,100.},{100.,100.,100.,100.},{100.,100.,100.,100.}};
+
+
+
+
+
+
+int main() {
+
+    FILE* file = fopen("template.cfg", "w");
+    if (!file) return 1;
+
+
+    // Write header
+    fprintf(file, "#####################################\n");
+    fprintf(file, "###     THIS IS A CONFIG FILE     ###\n");
+    fprintf(file, "#####################################\n");
+    fprintf(file, "\n\n\n");
+
+    
+    // Write global variables
+    fprintf(file, "#####################################\n");
+    fprintf(file, "###  GLOBAL VARIABLES                \n");
+    fprintf(file, "#####################################\n");
+    fprintf(file, "\n# Beam polarization definitions\n\n");
+
+    for (int ii=0; ii<NBEAMTIMES; ii++){
+      for (int jj=0; jj<4;jj++) fprintf(file, "define polVal_%s %.4f\n",subreaction[ii][jj],polVal[ii][jj]);
+      fprintf(file, "\n");
+    }
+    
+    for (int ii=0; ii<NBEAMTIMES; ii++){
+      for (int jj=0; jj<4;jj++) fprintf(file, "define polAng_%s %.1f\n",subreaction[ii][jj],polAng[ii][jj]);
+      fprintf(file, "\n");
+    }    
+    fprintf(file, "\n\n");
+
+    
+    
+    fprintf(file, "# Used masses and widths\n");
+    fprintf(file, "parameter deltaMass 1.232 bounded  1.182 1.282\n");
+    fprintf(file, "parameter deltaWidth 0.117 bounded 0.067 0.167\n");
+    fprintf(file, "parameter rhoMass 0.775 bounded  0.725 0.825\n");
+    fprintf(file, "parameter rhoWidth 0.147 bounded 0.097 0.197\n");
+    fprintf(file, "parameter f2Mass 1.275 bounded   1.225 1.325\n");
+    fprintf(file, "parameter f2Width 0.187 bounded   0.137 0.237\n");
+    fprintf(file, "\ndefine delta [deltaMass] [deltaWidth]\n");
+    fprintf(file, "define rho [rhoMass] [rhoWidth]\n");
+    fprintf(file, "define f2 [f2Mass] [f2Width]\n");
+    fprintf(file, "\n\nfit fit_rhof2IsoAmp_$SUBRANGE\n");
+    fprintf(file, "\n\n\n");
+
+
+    //write loop statements
+    fprintf(file, "#####################################\n");
+    fprintf(file, "###  LOOP STATEMENTS                 \n");
+    fprintf(file, "#####################################\n");
+
+    fprintf(file, "\nloop LOOPREAC");
+    for (int ii=0; ii<NBEAMTIMES; ii++){
+      for (int jj=0; jj<4;jj++)  fprintf(file, " rhof2Iso_%s",subreaction[ii][jj]);
+    }
+    fprintf(file, "\n\nloop NIFILE");
+    for (int ii=0; ii<NBEAMTIMES; ii++){
+      for (int jj=0; jj<4;jj++)  fprintf(file, " rhof2Iso_%s__$SUBRANGE.ni",subreaction[ii][jj]);
+    }
+    fprintf(file, "\n\nnormintfile LOOPREAC NIFILE\n#input\n");
+    fprintf(file, "\n\n\n");
+    
+    fprintf(file, "loop LOOPDATA");
+    for (int ii=0; ii<NBEAMTIMES; ii++){
+      for (int jj=0; jj<4;jj++)  fprintf(file, " $PATH/data_prompt_%s.root",link[ii][jj]);
+    }
+
+    fprintf(file, "\n\nloop LOOPBG");
+    for (int ii=0; ii<NBEAMTIMES; ii++){
+      for (int jj=0; jj<4;jj++)  fprintf(file, " $PATH/data_sideband_%s.root",link[ii][jj]);
+    }
+
+    fprintf(file, "\n\nloop LOOPACCMC");
+    for (int ii=0; ii<NBEAMTIMES; ii++){
+      for (int jj=0; jj<4;jj++)  fprintf(file, " $PATH/mcphsp_acc_%s.root",link[ii][jj]);
+    }
+    
+    fprintf(file, "\n\nloop LOOPGENMC");
+    for (int ii=0; ii<NBEAMTIMES; ii++){
+      for (int jj=0; jj<4;jj++)  fprintf(file, " $PATH/mcphsp_thrown_%s.root",link_thrown[ii]);
+    }
+    
+    fprintf(file, "\n\nloop LOOPSCALE");
+    for (int ii=0; ii<NBEAMTIMES; ii++){
+      for (int jj=0; jj<4;jj++)  fprintf(file, " [parScale_%s]",subreaction[ii][jj]);
+    }
+
+    fprintf(file, "\n\nloop LOOPPOLANG");
+    for (int ii=0; ii<NBEAMTIMES; ii++){
+      for (int jj=0; jj<4;jj++)  fprintf(file, " polAng_%s",subreaction[ii][jj]);
+    }
+    
+    fprintf(file, "\n\nloop LOOPPOLVAL");
+    for (int ii=0; ii<NBEAMTIMES; ii++){
+      for (int jj=0; jj<4;jj++)  fprintf(file, " polVal_%s",subreaction[ii][jj]);
+    }
+    fprintf(file, "\n\n\n\n");
+
+
+    //Write Definitions for reactions and sums, and for the Iso_ps_refl amplitude
+    writeDefault(file);
+    fprintf(file, "\n\n\n");
+    writeAmpDefinition(file);
+    fprintf(file, "\n\n\n");
+
+    
+    //Write partial wave definitions
+    fprintf(file, "########################### Uniform background  #####################################\n\n");
+    fprintf(file, "amplitude LOOPREAC::UniBG::Flat Uniform\n");
+    fprintf(file,"\n#####################################################################################");
+    fprintf(file, "\n\n\n");
+
+
+
+    for (int ii=0; ii<NTERMS; ii++){
+      if (strlen(pwname[ii]) > 0) fprintf(file, "############################ %s ##################################\n\n",pwname[ii]);
+      writeIsoPsAmp(file, pwterm[ii], signature[ii][0], signature[ii][1], signature[ii][2], signature[ii][3]); 
+      if (strcmp(bwtype[ii],"rho") == 0) writeBW(file, pwterm[ii], "rho", 1, 3, 4);    
+      if (strcmp(bwtype[ii],"f2") == 0)  writeBW(file, pwterm[ii], "f2", 2, 3, 4);    
+      fprintf(file, "\n\n");
+    }
+      fprintf(file, "\n");
+
+
+
+    // Write setting constraints
+    fprintf(file, "#####################################\n");
+    fprintf(file, "###     SET CONSTRAINTS           ###\n");
+    fprintf(file, "#####################################\n");
+    fprintf(file, "# Constrain same amplitudes in different incoherent sums\n");
+    for (int ii=0; ii<NTERMS; ii++)
+      writeConstrainAmps(file,pwterm[ii]);
+    fprintf(file, "\n\n\n");
+    fprintf(file, "# Constrain all other 'reactions' to the first one:\n");
+    fprintf(file, "constrain rhof2Iso_%s::UniBG::Flat  LOOPREAC::UniBG::Flat\n",subreaction[0][0]);      
+    for (int ii=0; ii<NTERMS; ii++)
+      writeConstrainReactions(file,subreaction[0][0],pwterm[ii]);
+    fprintf(file, "\n\n\n");
+ 
+
+    // Write scaling
+    fprintf(file, "#####################################\n");
+    fprintf(file, "###     SETUP SCALING             ###\n");
+    fprintf(file, "#####################################\n");
+
+    fprintf(file, "\nparameter parScale_%s 1.0 fixed\n",subreaction[0][0]);
+    for (int jj=1; jj<4;jj++)  fprintf(file, "parameter parScale_%s 1.0\n",subreaction[0][jj]);
+    fprintf(file, "\n");
+    
+    for (int ii=1; ii<NBEAMTIMES; ii++){
+      for (int jj=0; jj<4;jj++)  fprintf(file, "parameter parScale_%s 1.0\n",subreaction[ii][jj]);
+    fprintf(file, "\n");
+    }
+    
+
+    fprintf(file, "\n\nscale LOOPREAC::UniBG::Flat LOOPSCALE\n");
+    for (int ii=0; ii<NTERMS; ii++)
+      writeScaling(file,pwterm[ii]);
+    fprintf(file, "\n\n\n");
+
+
+    // Write initializing amplitudes
+    fprintf(file, "#####################################\n");
+    fprintf(file, "###   INITIALIZE AMPLITUDES       ###\n");
+    fprintf(file, "#####################################\n");
+    fprintf(file, "\ninitialize LOOPREAC::UniBG::Flat cartesian 760. 0. real\n");
+    writeInitializationReal(file,pwterm[0],1117.,-1846.);
+    for (int ii=1; ii<NTERMS; ii++)
+      writeInitialization(file,pwterm[ii],initialpoint[ii][0],initialpoint[ii][1],initialpoint[ii][2],initialpoint[ii][3]); 
+      //      writeInitialization(file,pwterm[ii]); //default initialization, always at (100.,100.) 
+    fprintf(file, "\n\n\n");
+
+
+    
+	    
+    fclose(file);
+    printf("Template file written\n");
+
+    return 0;
+}

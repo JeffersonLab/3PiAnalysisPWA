@@ -1,4 +1,7 @@
+ps -u $USER -o rss=,comm= | grep fitMPI | awk '{sum+=$1} END {print sum/1024/1024 " GB"}'
+watch -n 5 'ps -u $USER -o rss=,comm= | grep fit | awk "{sum+=\$1} END {print sum/1024/1024 \" GB\"}"'
 squeue -u $USERID
 scontrol show job $JOBID
 scontrol show node $NODEID
+sacct -u $USERID --starttime=now-14days
 sacct -j $JOBID --format=JobID%20,State%12,ExitCode%10,Elapsed%12,MaxRSS%12,AveRSS%12,StdOut%110

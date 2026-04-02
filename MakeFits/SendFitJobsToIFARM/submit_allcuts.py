@@ -14,15 +14,15 @@ def main(argv):
     PARTITION  = "ifarm" #"gpu"
     GPUTYPE    = "A100" #T4
     TIMELIMIT  = "24:00:00"   # Max walltime
-    RAMLIMIT   = 128          # Requested memory in GB
+    RAMLIMIT   = 160          # Requested memory in GB
     nGPUs      = 0            # Number of GPU cards used by MPI
     nCPUs      = 32           # Number of CPUs used by MPI (only if nGPUs=0)
 
     
     # FIT INFO
-    argFitName = "3PiRhoIsoFit"              
-    argFitType = "3PiFitSymmetrizedRhoIsobarBW" 
-    argNumRand = 50                     # set to 0 for likelihood scan 
+    argFitName = "3PiBinnedFit"              
+    argFitType = "3PiFit_rhoBWIso_f2BWIso" 
+    argNumRand = 0                      # set to 0 for likelihood scan 
     argPrecision = "1.e-13"             # set to negative for MINUIT determined precision    
     argParamSeeds = "nofile.txt" #/volatile/... # initial parameter seeds from previous fit: used for likelihood scan or bootstrap
 
@@ -72,8 +72,8 @@ def main(argv):
     t_low =  [0.] 
     t_high = [0.25] 
 
-    mass_3pi_low = [1.20]
-    mass_3pi_high = [1.30]
+    mass_3pi_low  = [1.00,1.05,1.10,1.15,1.20,1.25,1.30,1.35,1.40,1.45,1.50,1.55,1.60,1.65,1.70,1.75,1.80]
+    mass_3pi_high = [1.05,1.10,1.15,1.20,1.25,1.30,1.35,1.40,1.45,1.50,1.55,1.60,1.65,1.70,1.75,1.80,1.85]
     
     mass_2pi_low =  [0.0]
     mass_2pi_high = [2.0]
@@ -91,7 +91,7 @@ def main(argv):
             for argMass2PiLow,argMass2PiHigh in zip(mass_2pi_low,mass_2pi_high):
 
                 # PREPARE DIRECTORIES AND CREATE THOSE THAT DON'T EXIST
-                subrange = "tbin0_m3pi_%.2f_%.2f_m2pi_%.2f_%.2f" % (argMass3PiLow,argMass3PiHigh,argMass2PiLow,argMass2PiHigh)
+                subrange = "tbin0_m3pi_%.2f_%.2f" % (argMass3PiLow,argMass3PiHigh)
 
                 argRunningDir = "%s/ampToolsFits/%s/%s" % (volatileDir,argFitName,subrange)
                 argInputTreesDir = "%s/TreesForAmpTools/%s" % (volatileDir,argFitName)                            

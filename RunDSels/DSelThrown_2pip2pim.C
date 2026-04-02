@@ -68,6 +68,9 @@ void DSelThrown_2pip2pim::Init(TTree *locTree)
 	//	dFlatTreeInterface->Create_Branch_Fundamental<Double_t>("DT_RFTime");
 	dFlatTreeInterface->Create_Branch_Fundamental<Double_t>("DiamondSet");	
 	dFlatTreeInterface->Create_Branch_Fundamental<Double_t>("tvar");
+	dFlatTreeInterface->Create_Branch_Fundamental<Double_t>("PiplusUPiminus1Piminus2_M");
+	dFlatTreeInterface->Create_Branch_Fundamental<Double_t>("PiplusUPiminus1_M");
+	dFlatTreeInterface->Create_Branch_Fundamental<Double_t>("PiplusUPiminus2_M");
 	dFlatTreeInterface->Create_Branch_Fundamental<Double_t>("EnBeam");
 
 
@@ -185,6 +188,14 @@ Bool_t DSelThrown_2pip2pim::Process(Long64_t locEntry)
 
 
 		TLorentzVector MomTransfP4 = locThrownBeam_P4 - locThrownPiplusU_P4 - locThrownPiminus1_P4 - locThrownPiminus2_P4;
+		TLorentzVector ThreePionP4 = locThrownPiplusU_P4 + locThrownPiminus1_P4 + locThrownPiminus2_P4;
+		TLorentzVector TwoPion1stCombP4 = locThrownPiplusU_P4 + locThrownPiminus1_P4;
+		TLorentzVector TwoPion2ndCombP4 = locThrownPiplusU_P4 + locThrownPiminus2_P4;
+		
+
+		Double_t locTwoPiMass1 = TwoPion1stCombP4.Mag();
+		Double_t locTwoPiMass2 = TwoPion2ndCombP4.Mag();
+		Double_t locThreePiMass = ThreePionP4.Mag();
 		Double_t loctvar = MomTransfP4.Mag2();
 
 		/////////////*********************Define angles in the GJ and HF frames; define auxiliary vectors*********************************
@@ -295,7 +306,7 @@ Bool_t DSelThrown_2pip2pim::Process(Long64_t locEntry)
 
 		/****************************************** FILL FLAT TREE (IF DESIRED) ******************************************/
 
-		if (loctvar >= -0.25){
+		//		if (loctvar >= -0.25){
 		
 		// RECOMMENDED: FILL ACCIDENTAL WEIGHT
 		// dFlatTreeInterface->Fill_Fundamental<Double_t>("accidweight",locHistAccidWeightFactor);
@@ -331,8 +342,15 @@ Bool_t DSelThrown_2pip2pim::Process(Long64_t locEntry)
 		//		dFlatTreeInterface->Fill_Fundamental<Double_t>("RFTimeWeight",RFTimeWeight);
 		dFlatTreeInterface->Fill_Fundamental<Double_t>("DiamondSet",dDiamondSet);
 		dFlatTreeInterface->Fill_Fundamental<Double_t>("EnBeam",locEnergy);
-		dFlatTreeInterface->Fill_Fundamental<Double_t>("tvar",loctvar);
+		dFlatTreeInterface->Fill_Fundamental<Double_t>("tvar",loctvar);		
+		dFlatTreeInterface->Fill_Fundamental<Double_t>("PiplusUPiminus1Piminus2_M",locThreePiMass);
+		dFlatTreeInterface->Fill_Fundamental<Double_t>("PiplusUPiminus1_M",locTwoPiMass1);
+		dFlatTreeInterface->Fill_Fundamental<Double_t>("PiplusUPiminus2_M",locTwoPiMass2);
 
+
+		
+
+		
 
 		//Thrown angles in the GJ and HF frames
 		dFlatTreeInterface->Fill_Fundamental<Double_t>("CosThetaThrown_Piminus1Bachelor_GJ",CosThetaThrown_Piminus1_GJ);	
@@ -350,7 +368,7 @@ Bool_t DSelThrown_2pip2pim::Process(Long64_t locEntry)
 		//FILL FLAT TREE
 		FillAmpTools_FlatTree(locThrownBeam_P4, locThrownFinalStateP4);
 		Fill_FlatTree(); // for every event
-		}
+		//		}
 
 
 	return kTRUE;

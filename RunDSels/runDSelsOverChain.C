@@ -17,12 +17,21 @@ void runDSelsOverChain(unsigned int Proof_Nthreads = 32)
 {
 
 
-  
-  TString runNumber = "3"; 
-  const char *sampleDir = "/cache/halld/gluex_simulations/REQUESTED_MC/ilbelov_ppippippimpim_phsp_mask010_2017-01_70M_4285/root/trees/tree_pippippimpim__B4_gen_amp_V2/";
-  const char *treeName = "pippippimpim__B4_Tree"; //"Thrown_Tree"; 
+
+
+  TString runNumber = "5"; 
+  const char *sampleDir = "/cache/halld/gluex_simulations/REQUESTED_MC/MC_ppippippimpim_phsp_mask010_2018-08_70M_4640/root/thrown/";
+  const char *treeName = "Thrown_Tree"; 
+  const char *myDSelector = "/work/halld/home/ilbelov/RunDSels/DSelThrown_2pip2pim.C";
+
+
+    
+  /*  
+  TString runNumber = "5"; 
+  const char *sampleDir = "/cache/halld/gluex_simulations/REQUESTED_MC/ilbelov_ppippippimpim_phsp_mask010_2018-08_70M_4489/root/trees/tree_pippippimpim__B4_gen_amp_V2/";
+  const char *treeName = "pippippimpim__B4_Tree";  
   const char *myDSelector = "/work/halld/home/ilbelov/RunDSels/DSelMC_2pip2pim.C";
-  
+  */
   
   /*
   TString runNumber = "5";
@@ -55,7 +64,7 @@ void runDSelsOverChain(unsigned int Proof_Nthreads = 32)
 
   
   cout << "Now running selector on files in: " << sampleDir <<endl;
- 
+
 
   TChain *chain = new TChain(treeName);
   TSystemDirectory dir(sampleDir, sampleDir);
@@ -74,17 +83,16 @@ void runDSelsOverChain(unsigned int Proof_Nthreads = 32)
 			  cout << fileName << endl;
 			  
 			  // Check if file corrupted
-			  TFile f(sampleDir+fileName);
-			  if(f.TestBit(TFile::kRecovered)) {
+			  TFile *f = TFile::Open(sampleDir+fileName);
+			  if(f->TestBit(TFile::kRecovered)) {
 				  cout<<"file corrupted -> skipping"<<endl;
 				  continue;
 			  }
-			  if(f.IsZombie()) {
+			  if(f->IsZombie()) {
 				  cout<<"file is a Zombie -> skipping"<<endl;
 				  continue;
 			  }
 			  
-		
 			  chain->Add(sampleDir+fileName);
 			  ifile++; //if (ifile == 5) break;
 		  }

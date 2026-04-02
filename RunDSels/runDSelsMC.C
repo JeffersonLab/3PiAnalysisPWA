@@ -1,16 +1,14 @@
-
 void runDSelsMC()
 {
  
   const char *folder = "";
 
   //  const char *input0 = "/work/halld/home/ilbelov/MCphspSpring2017/mask010/FlatTrees/tree_pippippimpim__B4_gen_amp_V2_sum_PERP_45_30274_31057.root";
-  const char *input0 = "/cache/halld/gluex_simulations/REQUESTED_MC/MC_ppippippimpim_phsp_mask011_2018-08_70M_4479/root/trees/tree_pippippimpim__B4_gen_amp_V2/tree_pippippimpim__B4_gen_amp_V2_051687.root";
+  const char *input0 = "/cache/halld/gluex_simulations/REQUESTED_MC/MC_ppippippimpim_phsp_mask010_2018-08_70M_4640/root/thrown/tree_thrown_gen_amp_V2_051764.root";
 
   
     TFile *file0 = TFile::Open(input0,"READ");
-    TTree *intree = (TTree*)file0->Get("pippippimpim__B4_Tree"); 
- 
+    TTree *intree = (TTree*)file0->Get("Thrown_Tree"); 
   
   /*
   TFile *file1 = TFile::Open(input1,"READ");
@@ -37,8 +35,8 @@ void runDSelsMC()
   gROOT->ProcessLine(".x $ROOT_ANALYSIS_HOME/scripts/Load_DSelector.C");
   std::cout << "The DSelectors library is loaded" << endl;
 
-  std::cout << "Now, running the \'DSelMC_2pip2pim\' script " << endl;  
-  intree->Process("DSelMC_2pip2pim.C+");
+  std::cout << "Now, running the \'DSelThrown_2pip2pim\' script " << endl;  
+  intree->Process("DSelThrown_2pip2pim.C+");
 
   /*
   file1->TFile::Close();

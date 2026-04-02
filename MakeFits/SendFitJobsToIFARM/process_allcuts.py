@@ -22,7 +22,7 @@ def linkfiles(DataSampleDir,MCphspSampleDir,FitInputTreesDir,linksDir,runnums,tv
     MCphspSampleAccDir = MCphspSampleDir+"/POLS"
     MCphspSampleThrownDir = MCphspSampleDir+"/ThrownTrees"
     #subrange = "tvar_%.2f_%.2f_m3pi_%.2f_%.2f_m2pi_%.2f_%.2f" % (tvar_low,tvar_high,m3pi_low,m3pi_high,m2pi_low,m2pi_high)
-    subrange = "tbin0_m3pi_%.2f_%.2f_m2pi_%.2f_%.2f" % (m3pi_low,m3pi_high,m2pi_low,m2pi_high)
+    subrange = "tbin0_m3pi_%.2f_%.2f" % (m3pi_low,m3pi_high)
 
     
     #tvar in the trees is always negative, and we pass only positive range values
@@ -36,13 +36,10 @@ def linkfiles(DataSampleDir,MCphspSampleDir,FitInputTreesDir,linksDir,runnums,tv
         os.makedirs(FitInputTreesDir+"/"+subrange)
 
         
-     #For the thrown tree selections, we use only the thrown -t range
-     # We use the same Tree for any (m2pi, m3pi) subrange and either of the (00,45,90,135) polarization settings
-
-    if not os.path.exists("%s/throwntree_gen_amp_V2_mask010__sum_%s.root" % (FitInputTreesDir,runnums)):      
-            os.system("root -l -b -q  '/work/halld/home/ilbelov/skimTreeArgs.C(\"%s\",\"%s\",\"throwntree_gen_amp_V2_mask010__sum_%s.root\",\"%s\")'" % (MCphspSampleThrownDir,FitInputTreesDir,runnums,tvarcut))
+    if not os.path.exists("%s/%s/throwntree_gen_amp_V2_mask010__sum_%s.root" % (FitInputTreesDir,subrange,runnums)):      
+            os.system("root -l -b -q  '/work/halld/home/ilbelov/skimTreeArgs.C(\"%s\",\"%s/%s\",\"throwntree_gen_amp_V2_mask010__sum_%s.root\",\"%s\")'" % (MCphspSampleThrownDir,FitInputTreesDir,subrange,runnums,cuts))
             
-    os.system("ln -sf %s/throwntree_gen_amp_V2_mask010__sum_%s.root %s/mcphsp_thrown.root" % (FitInputTreesDir,runnums,linksDir) )            
+    os.system("ln -sf %s/%s/throwntree_gen_amp_V2_mask010__sum_%s.root %s/mcphsp_thrown_%s.root" % (FitInputTreesDir,subrange,runnums,linksDir,runnums) )            
 
             
     for orientation in ["PARA_0", "PERP_45", "PERP_90", "PARA_135"]:                    
@@ -79,11 +76,10 @@ def main(argv):
 
         tvar_low =  0.00
         tvar_high = 0.25
-        m3pi_low =  1.25
-        m3pi_high = 1.30
+        m3pi_low =  1.55
+        m3pi_high = 1.60
         m2pi_low =  0.0
         m2pi_high = 2.0    
-        subrange = "tbin0_m3pi_%.2f_%.2f_m2pi_%.2f_%.2f" % (m3pi_low,m3pi_high,m2pi_low,m2pi_high)
 
         
         parser_usage = "process_allcuts.py [13 parameters to overwrite the default variables]"
@@ -105,10 +101,15 @@ def main(argv):
                 m2pi_low = float(args[11])
                 m2pi_high = float(args[12])
 
+
                 
-                
+        # Define subrange               
+#        subrange = "tbin0_m3pi_%.2f_%.2f_m2pi_%.2f_%.2f" % (m3pi_low,m3pi_high,m2pi_low,m2pi_high)
+        subrange = "tbin0_m3pi_%.2f_%.2f" % (m3pi_low,m3pi_high)
+
+        
         # Config file
-        cfgTemplate = "template_rhoIsoAmp.cfg"
+        cfgTemplate = "template_rhoIso_f2Iso_amp.cfg"
         
         # Link files locally for fit
         linkfiles(DataSampleDir,MCphspSampleDir,FitInputTreesDir,linksDir,runnums,tvar_low,tvar_high,m3pi_low,m3pi_high,m2pi_low,m2pi_high)
@@ -122,7 +123,7 @@ def main(argv):
         filedata = filedata.replace("$PATH", linksDir)
         filedata = filedata.replace("$SUBRANGE", subrange)
 
-        cfgfile = "rhoIsoAmp__%s.cfg" % (subrange)
+        cfgfile = "rhoIso_f2Iso_amp__%s.cfg" % (subrange)
         f = open(cfgfile,'w')
         f.write(filedata)
         f.close()
@@ -170,8 +171,8 @@ def main(argv):
 
         
 	# Call plotter
-#        os.system("grep -l 'nan' ./fit_rhoIsoAmp_" + subrange + "*.fit | xargs rm") # delete nans
-#        os.system("vecps3pi_plotter fit_rhoIsoAmp_" + subrange + ".fit -o vecps3pi_histos_" + subrange + ".root") 
+        os.system("grep -l 'nan' ./fit_rhof2IsoAmp_" + subrange + "*.fit | xargs rm") # delete nans
+        os.system("isops_plotter fit_rhof2IsoAmp_" + subrange + ".fit -o isops_histos_" + subrange + ".root" + " -t isops_fitpars_" + subrange + ".txt") 
 
 
         # link files in output directory for plotter

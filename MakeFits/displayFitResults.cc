@@ -32,27 +32,34 @@ int main( int argc, char* argv[] ){
   FlatWave.push_back( "Flat" );
   
   vector<string> ZeroMinusWaves;
-  ZeroMinusWaves.push_back( "rhoIso_0-P" );
+  //  ZeroMinusWaves.push_back( "rhoIso_0-P" );
+  ZeroMinusWaves.push_back( "pipiIso_0-S" );
 
   vector<string> OnePlusWaves;
-  OnePlusWaves.push_back( "rhoIso_1+S-" );
-  OnePlusWaves.push_back( "rhoIso_1+S0" );
-  OnePlusWaves.push_back( "rhoIso_1+S+" );
-  OnePlusWaves.push_back( "rhoIso_1+D-" );
-  OnePlusWaves.push_back( "rhoIso_1+D0" );
-  OnePlusWaves.push_back( "rhoIso_1+D+" );
+  //  OnePlusWaves.push_back( "rhoIso_1+S-" );
+  //  OnePlusWaves.push_back( "rhoIso_1+S0" );
+  //  OnePlusWaves.push_back( "rhoIso_1+S+" );
 
-  OnePlusWaves.push_back( "f2Iso_1+P-" );
-  OnePlusWaves.push_back( "f2Iso_1+P0" );
-  OnePlusWaves.push_back( "f2Iso_1+P+" );
+  //  OnePlusWaves.push_back( "rhoIso_1+D-" );
+  //  OnePlusWaves.push_back( "rhoIso_1+D0" );
+  //  OnePlusWaves.push_back( "rhoIso_1+D+" );
+
+  //  OnePlusWaves.push_back( "f2Iso_1+P-" );
+  //  OnePlusWaves.push_back( "f2Iso_1+P0" );
+  //  OnePlusWaves.push_back( "f2Iso_1+P+" );
+
+    OnePlusWaves.push_back( "pipiIso_1+P-" );
+    OnePlusWaves.push_back( "pipiIso_1+P0" );
+    OnePlusWaves.push_back( "pipiIso_1+P+" );
 
   
+  
   vector<string> TwoPlusWaves;
-  TwoPlusWaves.push_back( "rhoIso_2+D--" );
-  TwoPlusWaves.push_back( "rhoIso_2+D-" );
-  TwoPlusWaves.push_back( "rhoIso_2+D0" );
-  TwoPlusWaves.push_back( "rhoIso_2+D+" );
-  TwoPlusWaves.push_back( "rhoIso_2+D++" );
+  //  TwoPlusWaves.push_back( "rhoIso_2+D--" );
+  //  TwoPlusWaves.push_back( "rhoIso_2+D-" );
+  //  TwoPlusWaves.push_back( "rhoIso_2+D0" );
+  //  TwoPlusWaves.push_back( "rhoIso_2+D+" );
+  //  TwoPlusWaves.push_back( "rhoIso_2+D++" );
 
   //  TwoPlusWaves.push_back( "f2Iso_2+P--" );
   //  TwoPlusWaves.push_back( "f2Iso_2+P-" );
@@ -61,11 +68,17 @@ int main( int argc, char* argv[] ){
   //  TwoPlusWaves.push_back( "f2Iso_2+P++" );
 
   vector<string> TwoMinusWaves;
-  TwoMinusWaves.push_back( "f2Iso_2-S--" );
-  TwoMinusWaves.push_back( "f2Iso_2-S-" );
-  TwoMinusWaves.push_back( "f2Iso_2-S0" );
-  TwoMinusWaves.push_back( "f2Iso_2-S+" );
-  TwoMinusWaves.push_back( "f2Iso_2-S++" );
+  //  TwoMinusWaves.push_back( "f2Iso_2-S--" );
+  //  TwoMinusWaves.push_back( "f2Iso_2-S-" );
+  //  TwoMinusWaves.push_back( "f2Iso_2-S0" );
+  //  TwoMinusWaves.push_back( "f2Iso_2-S+" );
+  //  TwoMinusWaves.push_back( "f2Iso_2-S++" );
+
+  //  TwoMinusWaves.push_back( "f2Iso_2-D--" );
+  //  TwoMinusWaves.push_back( "f2Iso_2-D-" );
+  //  TwoMinusWaves.push_back( "f2Iso_2-D0" );
+  //  TwoMinusWaves.push_back( "f2Iso_2-D+" );
+  //  TwoMinusWaves.push_back( "f2Iso_2-D++" );
   
   
   

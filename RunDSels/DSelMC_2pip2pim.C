@@ -884,7 +884,7 @@ Bool_t DSelMC_2pip2pim::Process(Long64_t locEntry)
 
 		
 		//*************************************** APPLYING LOOSE (CUSTOM) CUTS HERE ****************************************//
-		if (MissingMass < -0.02 || MissingMass > 0.02 || chi2ndof > 10 ||  tvar1 < -10. ||
+		if (MissingMass < -0.02 || MissingMass > 0.02 || chi2ndof > 10 ||  //tvar1 < -10. ||
 		locBeamP4.E() < 8.2 || locBeamP4.E() > 8.8  || PV_Z_measured < 51. || PV_Z_measured > 78. || PV_R_measured > 1.) 
 		{
 			dComboWrapper->Set_IsComboCut(true);

@@ -119,7 +119,7 @@ double vanHoveomega(TLorentzVector &P1, TLorentzVector &P2, TLorentzVector &P3)
 //   return van Hove theta and phi for particles P1, P2, P3, and P4 (it is assumed that CM = P1 + P2 + P3 + P4)
 // ***************************************
 
-double vanHovetheta(TLorentzVector &P1, TLorentzVector &P2, TLorentzVector &P3, TLorentzVector &P4)
+double vanHoveTheta(TLorentzVector &P1, TLorentzVector &P2, TLorentzVector &P3, TLorentzVector &P4)
 {
     TLorentzVector p1(P1);
     TLorentzVector p2(P2);
@@ -141,10 +141,10 @@ double vanHovetheta(TLorentzVector &P1, TLorentzVector &P2, TLorentzVector &P3, 
 
     double theta = TMath::ATan2(TMath::Sqrt(x*x+y*y),z);
 
-    return TMath::RadToDeg()*theta;
+    return theta;
 }
 
-double vanHovephi(TLorentzVector &P1, TLorentzVector &P2, TLorentzVector &P3, TLorentzVector &P4)
+double vanHovePhi(TLorentzVector &P1, TLorentzVector &P2, TLorentzVector &P3, TLorentzVector &P4)
 {
     TLorentzVector p1(P1);
     TLorentzVector p2(P2);
@@ -166,7 +166,7 @@ double vanHovephi(TLorentzVector &P1, TLorentzVector &P2, TLorentzVector &P3, TL
     double phi = TMath::ATan2(y,x);
     if( phi < 0 ) phi += 2.0*TMath::Pi();
 
-    return TMath::RadToDeg()*phi;
+    return phi;
 }
 
 

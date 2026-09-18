@@ -43,12 +43,20 @@ void writeAmpDefinition(FILE *f)
     fprintf(f, "#       [L] = S,P,D,F, etc.\n\n");
 
     fprintf(f, "#############################################################\n");
-    fprintf(f, "#amplitude rhof2Iso::sum_name::amp_name\n");
+    fprintf(f, "#amplitude 3PiDelta::sum_name::amp_name\n");
     fprintf(f, "#Iso_ps_refl(J,m,L,Re/Im,sign,angle,fraction,dalitz)\n");
 }
 
 
 void writeIsoPsAmp(FILE *f, const char *term, int S, int J, int M, int L){
+  fprintf(f,"amplitude LOOPREAC::ImagNegSign::%s Iso_ps_refl %d %d %d %d -1 -1\n",term,S,J,M,L);
+  fprintf(f,"amplitude LOOPREAC::RealNegSign::%s Iso_ps_refl %d %d %d %d +1 -1\n",term,S,J,M,L);
+  fprintf(f,"amplitude LOOPREAC::ImagPosSign::%s Iso_ps_refl %d %d %d %d -1 +1\n",term,S,J,M,L);
+  fprintf(f,"amplitude LOOPREAC::RealPosSign::%s Iso_ps_refl %d %d %d %d +1 +1\n",term,S,J,M,L);
+}
+
+
+void writeIsoPsAmpPol(FILE *f, const char *term, int S, int J, int M, int L){
   fprintf(f,"amplitude LOOPREAC::ImagNegSign::%s Iso_ps_refl %d %d %d %d -1 -1 LOOPPOLANG LOOPPOLVAL\n",term,S,J,M,L);
   fprintf(f,"amplitude LOOPREAC::RealNegSign::%s Iso_ps_refl %d %d %d %d +1 -1 LOOPPOLANG LOOPPOLVAL\n",term,S,J,M,L);
   fprintf(f,"amplitude LOOPREAC::ImagPosSign::%s Iso_ps_refl %d %d %d %d -1 +1 LOOPPOLANG LOOPPOLVAL\n",term,S,J,M,L);
@@ -64,16 +72,24 @@ void writeBW(FILE *f, const char *term, const char *masswidth, int S, int index1
 }
 
 
+void writeAMPK(FILE *f, const char *term, int index1, int index2){
+  fprintf(f,"\namplitude LOOPREAC::ImagNegSign::%s PiPiSWaveAMPK %d %d\n",term,index1,index2);
+  fprintf(f,"amplitude LOOPREAC::RealNegSign::%s PiPiSWaveAMPK %d %d\n",term,index1,index2);
+  fprintf(f,"amplitude LOOPREAC::ImagPosSign::%s PiPiSWaveAMPK %d %d\n",term,index1,index2);
+  fprintf(f,"amplitude LOOPREAC::RealPosSign::%s PiPiSWaveAMPK %d %d\n",term,index1,index2);
+}
+
+
 void writeConstrainAmps(FILE *f, const char *term){
   fprintf(f,"\nconstrain LOOPREAC::ImagNegSign::%s LOOPREAC::RealPosSign::%s\n",term,term);
   fprintf(f,"constrain LOOPREAC::RealNegSign::%s LOOPREAC::ImagPosSign::%s\n",term,term);
 }
 
 void writeConstrainReactions(FILE *f, const char *firstreaction, const char *term){
-  fprintf(f,"\nconstrain rhof2Iso_%s::RealNegSign::%s LOOPREAC::RealNegSign::%s\n",firstreaction,term,term);
-  fprintf(f,"constrain rhof2Iso_%s::ImagNegSign::%s LOOPREAC::ImagNegSign::%s\n",firstreaction,term,term);
-  fprintf(f,"constrain rhof2Iso_%s::RealPosSign::%s LOOPREAC::RealPosSign::%s\n",firstreaction,term,term);
-  fprintf(f,"constrain rhof2Iso_%s::ImagPosSign::%s LOOPREAC::ImagPosSign::%s\n",firstreaction,term,term);
+  fprintf(f,"\nconstrain 3PiDelta_%s::RealNegSign::%s LOOPREAC::RealNegSign::%s\n",firstreaction,term,term);
+  fprintf(f,"constrain 3PiDelta_%s::ImagNegSign::%s LOOPREAC::ImagNegSign::%s\n",firstreaction,term,term);
+  fprintf(f,"constrain 3PiDelta_%s::RealPosSign::%s LOOPREAC::RealPosSign::%s\n",firstreaction,term,term);
+  fprintf(f,"constrain 3PiDelta_%s::ImagPosSign::%s LOOPREAC::ImagPosSign::%s\n",firstreaction,term,term);
 }
 
 void writeScaling(FILE *f, const char *term){

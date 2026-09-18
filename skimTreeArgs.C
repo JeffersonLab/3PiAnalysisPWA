@@ -13,5 +13,3 @@ void skimTreeArgs(const char *inputdir, const char *outputdir, const char *filen
 
    
 }
-
-

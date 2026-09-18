@@ -6,8 +6,8 @@ echo $HOSTNAME
 ##The four diamond orientations and three beamtimes are added up in the config file
 
 setenv argEnv ${1}
-setenv argCodeDir ${2}
-setenv argParamSeeds ${3}
+setenv argGPU ${2}
+setenv argCodeDir ${3}
 setenv argNumRand ${4}
 setenv argPrecision ${5}
 
@@ -31,23 +31,31 @@ setenv argtLow ${17}
 setenv argtHigh ${18}
 setenv argM3PiLow ${19}
 setenv argM3PiHigh ${20}
-setenv argM2PiLow ${21}
-setenv argM2PiHigh ${22}
 
 
 
 
-
-#launch environment
+# launch environment
 source ~/.cshrc 
 source $argEnv
 
-which fitMPI
+
+# check executables and GPU cards availability 
+if ( $argGPU > 0 ) then
+    which fit
+    nvidia-smi
+else
+    which fitMPI
+endif
+
+
+
+ 
 
 
 # copy scripts to working directory
 cp ${argCodeDir}/prepare_allcuts.py .
-cp ${argCodeDir}/template_rhoIso_f2Iso_amp.cfg .
+cp ${argCodeDir}/template_3PiDelta.cfg .
 
 # copy parameter seeds for likelihood scan or bootstrap
 #cp $argParamSeeds seed.txt
@@ -56,34 +64,37 @@ cp ${argCodeDir}/template_rhoIso_f2Iso_amp.cfg .
 ls -lhtr
 
 
-# check GPU card is active
-#nvidia-smi
-
 
 # Define subrange 
-set subrange = `printf "tbin0_m3pi_%.2f_%.2f" ${argM3PiLow} ${argM3PiHigh}`
+set subrange = `printf "tbin0_m3pi_%.3f_%.3f" ${argM3PiLow} ${argM3PiHigh}`
 
 echo "Passed to the inner 'prepare_allcuts.py' script:"
-echo " ${argDataDirA}  ${argMCphspDirA}  ${argFitResDir}  ${argLinksDir}  ${argRunRangeA}  ${argtLow} ${argtHigh}  ${argM3PiLow}  ${argM3PiHigh}  ${argM2PiLow}  ${argM2PiHigh} "
+echo " ${argDataDirA}  ${argMCphspDirA}  ${argFitResDir}  ${argLinksDir}  ${argRunRangeA}  ${argtLow} ${argtHigh}  ${argM3PiLow}  ${argM3PiHigh}  "
 
 
 # prepare input trees for Spring-2017, Spring-2018 and Fall-2018 (use A,B,C for the beamtimes)
-python prepare_allcuts.py $argDataDirA  $argMCphspDirA  $argFitResDir  $argLinksDir  $argRunRangeA  $argtLow $argtHigh  $argM3PiLow  $argM3PiHigh  $argM2PiLow  $argM2PiHigh
-python prepare_allcuts.py $argDataDirB  $argMCphspDirB  $argFitResDir  $argLinksDir  $argRunRangeB  $argtLow $argtHigh  $argM3PiLow  $argM3PiHigh  $argM2PiLow  $argM2PiHigh
-#python prepare_allcuts.py $argDataDirC  $argMCphspDirC  $argFitResDir  $argLinksDir  $argRunRangeC  $argtLow $argtHigh  $argM3PiLow  $argM3PiHigh  $argM2PiLow  $argM2PiHigh
+python prepare_allcuts.py $argDataDirA  $argMCphspDirA  $argFitResDir  $argLinksDir  $argRunRangeA  $argtLow $argtHigh  $argM3PiLow  $argM3PiHigh  
+python prepare_allcuts.py $argDataDirB  $argMCphspDirB  $argFitResDir  $argLinksDir  $argRunRangeB  $argtLow $argtHigh  $argM3PiLow  $argM3PiHigh  
+python prepare_allcuts.py $argDataDirC  $argMCphspDirC  $argFitResDir  $argLinksDir  $argRunRangeC  $argtLow $argtHigh  $argM3PiLow  $argM3PiHigh  
 
     
 # prepare a config file using the template
-set cfgTemplate = "template_rhoIso_f2Iso_amp.cfg"
-set cfgfile = "rhoIso_f2Iso_amp__${subrange}.cfg"
+set cfgTemplate = "template_3PiDelta.cfg"
+set cfgfile = "3PiDelta__${subrange}.cfg"
 sed 's|$PATH|'${argLinksDir}'|g; s|$SUBRANGE|'${subrange}'|g' "${cfgTemplate}" > "${cfgfile}"
                 
 
-#Main command launching fit
-set command = "mpirun --mca btl_openib_allow_ib 1 fitMPI -c ${cfgfile} -m 100000"
+# Main command launching fit. Switch here between CPU and GPU commands
+# use -s ${param_seeds} for a specific seeding 
+# if run fitMPI interactively, add "-np 16" after "mpirun" 
 
-# add "-np 16" if running interactively on multiple processors
-#set command = "fit -c ${cfgfile} -m 1000000 -s ${param_seeds}"
+if ( $argGPU > 0 ) then
+    set command = "fit -c ${cfgfile} -m 1000000"
+else
+    set command = "mpirun --mca btl_openib_allow_ib 1 fitMPI -c ${cfgfile} -m 100000"
+endif
+
+
 
 
 if ( `echo "$argPrecision > 0" | bc` ) then
@@ -121,19 +132,10 @@ echo "  ${command}"
 #exit        
 eval $command
 
-        
-#Call plotter for succesfull fit outputs
-grep -l 'nan' ./fit_rhof2IsoAmp_${subrange}*.fit | xargs rm  
-isops_plotter fit_rhof2IsoAmp_${subrange}.fit -o isops_histos_${subrange}.root -t isops_fitpars_${subrange}.txt
 
-
-
-# cleanup auxiliary scripts and move root files
-rm template_rhoIso_f2Iso_amp.cfg
-mv isops_histos*.root  ../.
-
-
-ls -lhtr
+# cleanup auxiliary config script and failed fit outputs
+rm template_3PiDelta.cfg
+grep -l 'nan' ./fit_3PiDelta_${subrange}*.fit | xargs rm  
 
 
 

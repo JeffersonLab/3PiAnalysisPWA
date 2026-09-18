@@ -6,25 +6,50 @@
 
 
 //Define set of reactions and related constants
-const int NBEAMTIMES = 2;
-const char *subreaction[NBEAMTIMES][4] = {{"Spring2017_PARA_0","Spring2017_PERP_45","Spring2017_PERP_90","Spring2017_PARA_135"},{"Spring2018_PARA_0","Spring2018_PERP_45","Spring2018_PERP_90","Spring2018_PARA_135"}};
-const char *link[NBEAMTIMES][4] = {{"30274_31057_PARA_0","30274_31057_PERP_45","30274_31057_PERP_90","30274_31057_PARA_135"},{"40856_42559_PARA_0","40856_42559_PERP_45","40856_42559_PERP_90","40856_42559_PARA_135"}};
-const char *link_thrown[NBEAMTIMES] = {"30274_31057","40856_42559"};
+const int NBEAMTIMES = 3;
+const char *subreaction[NBEAMTIMES][4] = {{"Spring2017_PARA_0","Spring2017_PERP_45","Spring2017_PERP_90","Spring2017_PARA_135"},{"Spring2018_PARA_0","Spring2018_PERP_45","Spring2018_PERP_90","Spring2018_PARA_135"},{"Fall2018_PARA_0","Fall2018_PERP_45","Fall2018_PERP_90","Fall2018_PARA_135"}};
+const char *link[NBEAMTIMES][4] = {{"30274_31057_PARA_0","30274_31057_PERP_45","30274_31057_PERP_90","30274_31057_PARA_135"},{"40856_42559_PARA_0","40856_42559_PERP_45","40856_42559_PERP_90","40856_42559_PARA_135"},{"50685_51768_PARA_0","50685_51768_PERP_45","50685_51768_PERP_90","50685_51768_PARA_135"}};
+const char *link_thrown[NBEAMTIMES] = {"30274_31057","40856_42559","50685_51768"};
 
-float polVal[NBEAMTIMES][4] = {{0.3537,0.3484,0.3472,0.3512},{0.3458,0.3416,0.3448,0.3597}};
-float polAng[NBEAMTIMES][4] = {{1.8,47.9,94.5,138.4},{4.1,48.5,94.2,137.6}};
-
-
-//Define set of waves and initial values for each wave's intensity and phase
-const int NTERMS = 17;
-const char *pwterm[NTERMS] = {"rhoIso_0-P","rhoIso_1+S-","rhoIso_1+S0","rhoIso_1+S+","rhoIso_1+D-","rhoIso_1+D0","rhoIso_1+D+","rhoIso_2+D--","rhoIso_2+D-","rhoIso_2+D0","rhoIso_2+D+","rhoIso_2+D++","f2Iso_2-S--","f2Iso_2-S-","f2Iso_2-S0","f2Iso_2-S+","f2Iso_2-S++"};
-int signature[NTERMS][4] = {{1,0,0,1},{1,1,-1,0},{1,1,0,0},{1,1,1,0},{1,1,-1,2},{1,1,0,2},{1,1,1,2},{1,2,-2,2},{1,2,-1,2},{1,2,0,2},{1,2,1,2},{1,2,2,2},{2,2,-2,0},{2,2,-1,0},{2,2,0,0},{2,2,1,0},{2,2,2,0}};
-const char *pwname[NTERMS] = {"rhoIso: spin 0 parity -1","rhoIso: spin 0 parity +1","","","","","","rhoIso: spin 2 parity +1","","","","","f2Iso: spin2 parity -1","","","",""};
-const char *bwtype[NTERMS] = {"rho","rho","rho","rho","rho","rho","rho","rho","rho","rho","rho","rho","f2","f2","f2","f2","f2"};
+float polVal[NBEAMTIMES][4] = {{0.3537,0.3484,0.3472,0.3512},{0.3458,0.3416,0.3448,0.3597},{0.3563,0.3403,0.3430,0.3523}};
+float polAng[NBEAMTIMES][4] = {{1.8,47.9,94.5,138.4},{4.1,48.5,94.2,137.6},{3.3,48.3,92.9,137.9}};
 
 
-float initialpoint[NTERMS][4] = {{1117.,0.,-1846.,0.},{1949.,-1873.,-1156.,35.},{1555.,-265.,-421.,-1430.},{1066.,762.,142.,1013.},{950.,-1131.,1146.,-866.},{437.,-676.,135.,-1000.},{1430.,-27.,-93.,-108.},{-209.,434.,-142.,-110.},{-1663.,-171.,1573.,819.},{540.,1211.,-354.,1801.},{403.,173.,156.,-328.},{-661.,-657.,-819.,264.},{100.,100.,100.,100.},{100.,100.,100.,100.},{100.,100.,100.,100.},{100.,100.,100.,100.},{100.,100.,100.,100.}};
 
+//This template will include the {[pipi]s pi| 0-S,1+P}, {rho pi| 0-P,1+S,2+D} and {f2 pi| 2-S} waves
+const int NTERMS = 18;
+const char *pwterm[NTERMS] = {"pipiIso_0-S","pipiIso_1+P-","pipiIso_1+P0","pipiIso_1+P+","rhoIso_0-P","rhoIso_1+S-","rhoIso_1+S0","rhoIso_1+S+","rhoIso_2+D--","rhoIso_2+D-","rhoIso_2+D0","rhoIso_2+D+","rhoIso_2+D++","f2Iso_2-S--","f2Iso_2-S-","f2Iso_2-S0","f2Iso_2-S+","f2Iso_2-S++"};
+int signature[NTERMS][4] = {{0,0,0,0},{0,1,-1,1},{0,1,0,1},{0,1,1,1},{1,0,0,1},{1,1,-1,0},{1,1,0,0},{1,1,1,0},{1,2,-2,2},{1,2,-1,2},{1,2,0,2},{1,2,1,2},{1,2,2,2},{2,2,-2,0},{2,2,-1,0},{2,2,0,0},{2,2,1,0},{2,2,2,0}};
+const char *pwname[NTERMS] = {"pipiIso: spin 0 parity -1","pipiIso: spin 1 parity +1","","","rhoIso: spin 0 parity -1","rhoIso: spin 1 parity +1","","","rhoIso: spin 2 parity +1","","","","","f2Iso: spin2 parity -1","","","",""};
+const char *isobar[NTERMS] = {"pipi","pipi","pipi","pipi","rho","rho","rho","rho","rho","rho","rho","rho","rho","f2","f2","f2","f2","f2"};
+
+float initialpoint[NTERMS][4] = {{100.,100.,100.,100.},{100.,100.,100.,100.},{100.,100.,100.,100.},{100.,100.,100.,100.},{1117.,100.,-1846.,100.},{1949.,-1873.,-1156.,35.},{1555.,-265.,-421.,-1430.},{1066.,762.,142.,1013.},{-209.,434.,-142.,-110.},{-1663.,-171.,1573.,819.},{540.,1211.,-354.,1801.},{403.,173.,156.,-328.},{-661.,-657.,-819.,264.},{100.,100.,100.,100.},{100.,100.,100.,100.},{100.,100.,100.,100.},{100.,100.,100.,100.},{100.,100.,100.,100.}};
+
+
+
+
+//This template will include only the {[pipi]s pi| 0-S,1+P}, waves
+/*
+const int NTERMS = 4;
+const char *pwterm[NTERMS] = {"pipiIso_0-S","pipiIso_1+P-","pipiIso_1+P0","pipiIso_1+P+"};
+int signature[NTERMS][4] = {{0,0,0,0},{0,1,-1,1},{0,1,0,1},{0,1,1,1}};
+const char *pwname[NTERMS] = {"pipiIso: spin 0 parity -1","pipiIso: spin 1 parity +1","",""};
+const char *isobar[NTERMS] = {"pipi","pipi","pipi","pipi"};
+
+float initialpoint[NTERMS][4] = {{100.,100.,100.,100.},{100.,100.,100.,100.},{100.,100.,100.,100.},{100.,100.,100.,100.}};
+*/
+
+
+//This template will include the {rho pi| 0-P,1+S,1+D,2+D} and {f2 pi| 2-S, 2-D} waves
+/*
+const int NTERMS = 22;
+const char *pwterm[NTERMS] = {"rhoIso_0-P","rhoIso_1+S-","rhoIso_1+S0","rhoIso_1+S+","rhoIso_1+D-","rhoIso_1+D0","rhoIso_1+D+","rhoIso_2+D--","rhoIso_2+D-","rhoIso_2+D0","rhoIso_2+D+","rhoIso_2+D++","f2Iso_2-S--","f2Iso_2-S-","f2Iso_2-S0","f2Iso_2-S+","f2Iso_2-S++","f2Iso_2-D--","f2Iso_2-D-","f2Iso_2-D0","f2Iso_2-D+","f2Iso_2-D++"};
+int signature[NTERMS][4] = {{1,0,0,1},{1,1,-1,0},{1,1,0,0},{1,1,1,0},{1,1,-1,2},{1,1,0,2},{1,1,1,2},{1,2,-2,2},{1,2,-1,2},{1,2,0,2},{1,2,1,2},{1,2,2,2},{2,2,-2,0},{2,2,-1,0},{2,2,0,0},{2,2,1,0},{2,2,2,0},{2,2,-2,2},{2,2,-1,2},{2,2,0,2},{2,2,1,2},{2,2,2,2}};
+const char *pwname[NTERMS] = {"rhoIso: spin 0 parity -1","rhoIso: spin 1 parity +1","","","","","","rhoIso: spin 2 parity +1","","","","","f2Iso: spin2 parity -1","","","","","","","","",""};
+const char *isobar[NTERMS] = {"rho","rho","rho","rho","rho","rho","rho","rho","rho","rho","rho","rho","f2","f2","f2","f2","f2","f2","f2","f2","f2","f2"};
+
+float initialpoint[NTERMS][4] = {{1117.,0.,-1846.,0.},{1949.,-1873.,-1156.,35.},{1555.,-265.,-421.,-1430.},{1066.,762.,142.,1013.},{950.,-1131.,1146.,-866.},{437.,-676.,135.,-1000.},{1430.,-27.,-93.,-108.},{-209.,434.,-142.,-110.},{-1663.,-171.,1573.,819.},{540.,1211.,-354.,1801.},{403.,173.,156.,-328.},{-661.,-657.,-819.,264.},{100.,100.,100.,100.},{100.,100.,100.,100.},{100.,100.,100.,100.},{100.,100.,100.,100.},{100.,100.,100.,100.},{100.,100.,100.,100.},{100.,100.,100.,100.},{100.,100.,100.,100.},{100.,100.,100.,100.},{100.,100.,100.,100.}};
+*/
 
 
 
@@ -72,7 +97,7 @@ int main() {
     fprintf(file, "\ndefine delta [deltaMass] [deltaWidth]\n");
     fprintf(file, "define rho [rhoMass] [rhoWidth]\n");
     fprintf(file, "define f2 [f2Mass] [f2Width]\n");
-    fprintf(file, "\n\nfit fit_rhof2IsoAmp_$SUBRANGE\n");
+    fprintf(file, "\n\nfit fit_3PiDelta_$SUBRANGE\n");
     fprintf(file, "\n\n\n");
 
 
@@ -83,11 +108,11 @@ int main() {
 
     fprintf(file, "\nloop LOOPREAC");
     for (int ii=0; ii<NBEAMTIMES; ii++){
-      for (int jj=0; jj<4;jj++)  fprintf(file, " rhof2Iso_%s",subreaction[ii][jj]);
+      for (int jj=0; jj<4;jj++)  fprintf(file, " 3PiDelta_%s",subreaction[ii][jj]);
     }
     fprintf(file, "\n\nloop NIFILE");
     for (int ii=0; ii<NBEAMTIMES; ii++){
-      for (int jj=0; jj<4;jj++)  fprintf(file, " rhof2Iso_%s__$SUBRANGE.ni",subreaction[ii][jj]);
+      for (int jj=0; jj<4;jj++)  fprintf(file, " 3PiDelta_%s__$SUBRANGE.ni",subreaction[ii][jj]);
     }
     fprintf(file, "\n\nnormintfile LOOPREAC NIFILE\n#input\n");
     fprintf(file, "\n\n\n");
@@ -109,7 +134,8 @@ int main() {
     
     fprintf(file, "\n\nloop LOOPGENMC");
     for (int ii=0; ii<NBEAMTIMES; ii++){
-      for (int jj=0; jj<4;jj++)  fprintf(file, " $PATH/mcphsp_thrown_%s.root",link_thrown[ii]);
+      for (int jj=0; jj<4;jj++)  fprintf(file, " $PATH/mcphsp_acc_%s.root",link[ii][jj]);
+	//fprintf(file, " $PATH/mcphsp_thrown_%s.root",link_thrown[ii]); // for the thrown trees
     }
     
     fprintf(file, "\n\nloop LOOPSCALE");
@@ -146,9 +172,11 @@ int main() {
 
     for (int ii=0; ii<NTERMS; ii++){
       if (strlen(pwname[ii]) > 0) fprintf(file, "############################ %s ##################################\n\n",pwname[ii]);
-      writeIsoPsAmp(file, pwterm[ii], signature[ii][0], signature[ii][1], signature[ii][2], signature[ii][3]); 
-      if (strcmp(bwtype[ii],"rho") == 0) writeBW(file, pwterm[ii], "rho", 1, 3, 4);    
-      if (strcmp(bwtype[ii],"f2") == 0)  writeBW(file, pwterm[ii], "f2", 2, 3, 4);    
+      writeIsoPsAmpPol(file, pwterm[ii], signature[ii][0], signature[ii][1], signature[ii][2], signature[ii][3]); 
+      if (strcmp(isobar[ii],"pipi") == 0) writeAMPK(file, pwterm[ii], 3, 4);    
+      if (strcmp(isobar[ii],"rho") == 0) writeBW(file, pwterm[ii], "rho", 1, 3, 4);    
+      if (strcmp(isobar[ii],"f2") == 0)  writeBW(file, pwterm[ii], "f2", 2, 3, 4);    
+      writeBW(file, pwterm[ii], "delta", 1, 1, 5);    
       fprintf(file, "\n\n");
     }
       fprintf(file, "\n");
@@ -164,7 +192,7 @@ int main() {
       writeConstrainAmps(file,pwterm[ii]);
     fprintf(file, "\n\n\n");
     fprintf(file, "# Constrain all other 'reactions' to the first one:\n");
-    fprintf(file, "constrain rhof2Iso_%s::UniBG::Flat  LOOPREAC::UniBG::Flat\n",subreaction[0][0]);      
+    fprintf(file, "constrain 3PiDelta_%s::UniBG::Flat  LOOPREAC::UniBG::Flat\n",subreaction[0][0]);      
     for (int ii=0; ii<NTERMS; ii++)
       writeConstrainReactions(file,subreaction[0][0],pwterm[ii]);
     fprintf(file, "\n\n\n");

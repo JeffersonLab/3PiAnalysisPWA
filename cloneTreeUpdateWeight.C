@@ -10,12 +10,12 @@ void printListOfBranches(TTree *decaytree)
 
 
 
-void cloneTreeUpdateWeight(const char *infile, const char *outfile, const char *BranchName)
+void cloneTreeUpdateWeightInner(const char *infile, const char *outfile, Float_t value)
 {
+  //later change function with rewriting two instead of one paramaters
   const char *treename = "kin"; //remains intact   
-  std::string BranchTitle = std::string(BranchName)+"/F";
-  Float_t value = 1.; // for overwriting with unity
-
+  const char *BranchName = "Py_Beam";
+  const char *BranchTitle = "Py_Beam/F"; //available for passing an extra parameter
 
   
   TFile *fileIn  =TFile::Open(infile,"READ");
@@ -30,7 +30,7 @@ void cloneTreeUpdateWeight(const char *infile, const char *outfile, const char *
   TTree *outtree = (TTree*) intree->TTree::CloneTree(0);
   //  outtree->SetName("kin");
   //  outtree->CopyEntries(dctrChain);
-  outtree->Branch(BranchName,&value,BranchTitle.c_str()); 
+  outtree->Branch(BranchName,&value,BranchTitle); 
 
 
   
@@ -45,11 +45,9 @@ void cloneTreeUpdateWeight(const char *infile, const char *outfile, const char *
   //read event by event and replace the 'BranchName' entry to a new Float type value
   while (myReader->Next()){
     ientry = myReader->GetCurrentEntry();
-    intree->GetEntry(ientry);
-   
-    
+    intree->GetEntry(ientry);    
     outtree->Fill();
-    }
+  }
 
 
   
@@ -60,3 +58,38 @@ void cloneTreeUpdateWeight(const char *infile, const char *outfile, const char *
    fileOut->Close();
      
 }
+
+
+
+void cloneTreeUpdateWeight()
+{
+
+/*
+cloneTreeUpdateWeightInner("/lustre/beloviq2/3PiTreesToFit/Fall2018/flattree_2pip2pim__sum_PARA_0_50685_51768_prompt_allcuts.root","/lustre/beloviq2/3PiTreesToFit/Fall2018/tmp/flattree_2pip2pim__sum_PARA_0_50685_51768_prompt_allcuts.root",3.3);
+cloneTreeUpdateWeightInner("/lustre/beloviq2/3PiTreesToFit/Fall2018/flattree_2pip2pim__sum_PARA_0_50685_51768_sideband_allcuts.root","/lustre/beloviq2/3PiTreesToFit/Fall2018/tmp/flattree_2pip2pim__sum_PARA_0_50685_51768_sideband_allcuts.root",3.3);  
+cloneTreeUpdateWeightInner("/lustre/beloviq2/3PiTreesToFit/Fall2018/mctree_pippippimpim_phsp_mask010__sum_PARA_0_50685_51768_allcuts.root","/lustre/beloviq2/3PiTreesToFit/Fall2018/tmp/mctree_pippippimpim_phsp_mask010__sum_PARA_0_50685_51768_allcuts.root",3.3);
+
+  
+cloneTreeUpdateWeightInner("/lustre/beloviq2/3PiTreesToFit/Fall2018/flattree_2pip2pim__sum_PERP_45_50685_51768_prompt_allcuts.root","/lustre/beloviq2/3PiTreesToFit/Fall2018/tmp/flattree_2pip2pim__sum_PERP_45_50685_51768_prompt_allcuts.root",48.3);
+cloneTreeUpdateWeightInner("/lustre/beloviq2/3PiTreesToFit/Fall2018/flattree_2pip2pim__sum_PERP_45_50685_51768_sideband_allcuts.root","/lustre/beloviq2/3PiTreesToFit/Fall2018/tmp/flattree_2pip2pim__sum_PERP_45_50685_51768_sideband_allcuts.root",48.3);  
+cloneTreeUpdateWeightInner("/lustre/beloviq2/3PiTreesToFit/Fall2018/mctree_pippippimpim_phsp_mask010__sum_PERP_45_50685_51768_allcuts.root","/lustre/beloviq2/3PiTreesToFit/Fall2018/tmp/mctree_pippippimpim_phsp_mask010__sum_PERP_45_50685_51768_allcuts.root",48.3);
+  
+cloneTreeUpdateWeightInner("/lustre/beloviq2/3PiTreesToFit/Fall2018/flattree_2pip2pim__sum_PERP_90_50685_51768_prompt_allcuts.root","/lustre/beloviq2/3PiTreesToFit/Fall2018/tmp/flattree_2pip2pim__sum_PERP_90_50685_51768_prompt_allcuts.root",92.9);
+cloneTreeUpdateWeightInner("/lustre/beloviq2/3PiTreesToFit/Fall2018/flattree_2pip2pim__sum_PERP_90_50685_51768_sideband_allcuts.root","/lustre/beloviq2/3PiTreesToFit/Fall2018/tmp/flattree_2pip2pim__sum_PERP_90_50685_51768_sideband_allcuts.root",92.9);  
+cloneTreeUpdateWeightInner("/lustre/beloviq2/3PiTreesToFit/Fall2018/mctree_pippippimpim_phsp_mask010__sum_PERP_90_50685_51768_allcuts.root","/lustre/beloviq2/3PiTreesToFit/Fall2018/tmp/mctree_pippippimpim_phsp_mask010__sum_PERP_90_50685_51768_allcuts.root",92.9);
+
+
+cloneTreeUpdateWeightInner("/lustre/beloviq2/3PiTreesToFit/Fall2018/flattree_2pip2pim__sum_PARA_135_50685_51768_prompt_allcuts.root","/lustre/beloviq2/3PiTreesToFit/Fall2018/tmp/flattree_2pip2pim__sum_PARA_135_50685_51768_prompt_allcuts.root",137.9);
+cloneTreeUpdateWeightInner("/lustre/beloviq2/3PiTreesToFit/Fall2018/flattree_2pip2pim__sum_PARA_135_50685_51768_sideband_allcuts.root","/lustre/beloviq2/3PiTreesToFit/Fall2018/tmp/flattree_2pip2pim__sum_PARA_135_50685_51768_sideband_allcuts.root",137.9);  
+cloneTreeUpdateWeightInner("/lustre/beloviq2/3PiTreesToFit/Fall2018/mctree_pippippimpim_phsp_mask010__sum_PARA_135_50685_51768_allcuts.root","/lustre/beloviq2/3PiTreesToFit/Fall2018/tmp/mctree_pippippimpim_phsp_mask010__sum_PARA_135_50685_51768_allcuts.root",137.9);
+*/ 
+
+cloneTreeUpdateWeightInner("/lustre/beloviq2/3PiTreesToFit/Spring2017/flattree_2pip2pim__sum_POL_30274_31057_prompt_allcuts.root","/lustre/beloviq2/3PiTreesToFit/Spring2017/flattree_2pip2pim__sum_POL_30274_31057_prompt_allcuts_copied.root",0.350);
+cloneTreeUpdateWeightInner("/lustre/beloviq2/3PiTreesToFit/Spring2017/flattree_2pip2pim__sum_POL_30274_31057_sideband_allcuts.root","/lustre/beloviq2/3PiTreesToFit/Spring2017/flattree_2pip2pim__sum_POL_30274_31057_sideband_allcuts_copied.root",0.350);
+cloneTreeUpdateWeightInner("/lustre/beloviq2/3PiTreesToFit/Spring2017/mctree_pippippimpim_phsp_mask010__sum_POL_30274_31057_allcuts.root","/lustre/beloviq2/3PiTreesToFit/Spring2017/mctree_pippippimpim_phsp_mask010__sum_POL_30274_31057_allcuts_copied.root",0.350);
+
+
+
+  
+}
+

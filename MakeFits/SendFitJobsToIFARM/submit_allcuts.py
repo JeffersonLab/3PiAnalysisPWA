@@ -14,7 +14,7 @@ def main(argv):
     PARTITION  = "ifarm" #"gpu"
     GPUTYPE    = "A100" #T4
     TIMELIMIT  = "24:00:00"   # Max walltime
-    RAMLIMIT   = 160          # Requested memory in GB
+    RAMLIMIT   = 33          # Requested memory in GB
     nGPUs      = 0            # Number of GPU cards used by MPI
     nCPUs      = 32           # Number of CPUs used by MPI (only if nGPUs=0)
 

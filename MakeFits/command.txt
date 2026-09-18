@@ -1,2 +1,3 @@
+fit -c example_of_config.cfg -m 100000 -r 10
 mpirun -np 32 fitMPI -c rhoIsoAmp.cfg -m 100000 -r 10
 mpirun -np 32 fitMPI -c rhoIso_f2Iso_amp.cfg -m 100000 -r 10

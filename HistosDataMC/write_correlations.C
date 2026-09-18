@@ -48,7 +48,7 @@ void LoopOverTree(TChain *tchain)
   Long64_t ientry;
   Bool_t  isFile1, isFile2; 
   
-  TLorentzVector LV_P4, UV_P4;
+  TLorentzVector Delta_P4, X_P4;
   
   
   //********************************Reading the tree using TTreeReader**************************************
@@ -107,7 +107,6 @@ void LoopOverTree(TChain *tchain)
   TTreeReaderValue <Double_t> PhiPiminus2Bachelor_GJ(*myReader,"Phi_Piminus2Bachelor_GJ");
   TTreeReaderValue <Double_t> PhiPiminus1Isobar_HF(*myReader,"Phi_Piminus1Isobar_HF");
   TTreeReaderValue <Double_t> PhiPiminus2Isobar_HF(*myReader,"Phi_Piminus2Isobar_HF");
-
   
   
   //OTHER
@@ -122,45 +121,32 @@ void LoopOverTree(TChain *tchain)
   
   //*****************Declaring histograms to be filled********************
 
-  //Angles 
+  //Angles and van-Hove plots
   TH2D *anglesGJ = new TH2D("AnglesGJ","",4*DEFBINS,-1.,1.,4*DEFBINS,-180.,180.);
   TH2D *anglesHF = new TH2D("AnglesHF","",4*DEFBINS,-1.,1.,4*DEFBINS,-180.,180.);
+  TH2D *vanHoveXY_ppipLX = new TH2D("vanHoveXY","",4*DEFBINS,-2.5,2.5,4*DEFBINS,-2.5,2.5);
+  TH2D *vanHovePhiTheta_deltapippimpim = new TH2D("vanHovePhiTheta","",4*DEFBINS,0,2*TMath::Pi(),4*DEFBINS,0,TMath::Pi());
 
   
-  //3-particle van Hove plot 
-  TH2D *vanHoveXY_ppipLX = new TH2D("vanHoveXY_for_ppipLX","",4*DEFBINS,-2.5,2.5,4*DEFBINS,-2.5,2.5);
-
-  //3Pi mass correlation to 2Pi mass and angles
+  //Isobar mass and angles correlation to 3pi mass
   TH2D *pipUpimpim_mass_vs_isobar_mass = new TH2D("PiplusUPiminusPiminus_mass_vs_PiplusUPiminus_mass","",2*DEFBINS,0.,3.,2*DEFBINS,0.2,3.2);
-
   TH2D *pipUpimpim_mass_vs_CosTheta_GJ = new TH2D("PiplusUPiminusPiminus_mass_vs_CosTheta_GJ","",DEFBINS,-1.,1.,2*DEFBINS,0.2,3.2); //2*DEFBINS
   TH2D *pipUpimpim_mass_vs_Phi_GJ = new TH2D("PiplusUPiminusPiminus_mass_vs_Phi_GJ","",DEFBINS,-180.,180.,2*DEFBINS,0.2,3.2);
   TH2D *pipUpimpim_mass_vs_CosTheta_HF = new TH2D("PiplusUPiminusPiminus_mass_vs_CosTheta_HF","",DEFBINS,-1.,1.,2*DEFBINS,0.2,3.2);
   TH2D *pipUpimpim_mass_vs_Phi_HF = new TH2D("PiplusUPiminusPiminus_mass_vs_Phi_HF","",DEFBINS,-180.,180.,2*DEFBINS,0.2,3.2);
 
-
   
-    
-  //Momentum transfer correlation to masses 
+  //Masses and angles correlation to momentum transfer
   TH2D *pipUpimpim_mass_vs_minust = new TH2D("PiplusUPiminusPiminus_mass_vs_minust","",2*DEFBINS,0.2,3.2,DEFTBINS,0.,2.);
   TH2D *pipUpim_mass_vs_minust = new TH2D("PiplusUPiminus_mass_vs_minust","",2*DEFBINS,0.,3.,DEFTBINS,0.,2.);
   TH2D *ppipL_mass_vs_minust = new TH2D("ProtonPiplusL_mass_vs_minust","",2*DEFBINS,0.8,3.8,DEFTBINS,0.,2.);
   TH2D *fourpion_mass_vs_minust = new TH2D("FourPion_mass_vs_minust","",2*DEFBINS,0.5,3.5,DEFTBINS,0.,2.);
-
-  
-  
-  //Momentum transfer correlation to angles 
   TH3D *anglesGJ_vs_minust = new TH3D("AnglesGJ_vs_minust","",4*DEFBINS,-1.,1.,4*DEFBINS,-180.,180.,DEFTBINS,0.,2.);
   TH3D *anglesHF_vs_minust = new TH3D("AnglesHF_vs_minust","",4*DEFBINS,-1.,1.,4*DEFBINS,-180.,180.,DEFTBINS,0.,2.);
-  
-  // Angles in the Lab frame against the number of unused tracks
-  /*
-  TH3D *angles_p_vs_num = new TH3D("AnglesProton_vs_NumUnusedTracks","",4*DEFBINS,0.,80.,4*DEFBINS,-180.,180.,3,0.,3.);
-    TH3D *angles_pipU_vs_num = new TH3D("AnglesPiplusU_vs_NumUnusedTracks","",4*DEFBINS,0.,80.,4*DEFBINS,-180.,180.,3,0.,3.);
-    TH3D *angles_pipL_vs_num = new TH3D("AnglesPiplusL_vs_NumUnusedTracks","",4*DEFBINS,0.,180.,4*DEFBINS,-180.,180.,3,0.,3.);
-    TH3D *angles_pim1_vs_num = new TH3D("AnglesPiminus1_vs_NumUnusedTracks","",4*DEFBINS,0.,80.,4*DEFBINS,-180.,180.,3,0.,3.);
-    TH3D *angles_pim2_vs_num = new TH3D("AnglesPiminus2_vs_NumUnusedTracks","",4*DEFBINS,0.,80.,4*DEFBINS,-180.,180.,3,0.,3.);
-  */
+
+
+  //Correlation between the two pi+pi- masses
+  TH2D *isobar1_mass_vs_isobar2_mass = new TH2D("PiplusUPiminus1_mass_vs_PiplusUPiminus2_mass","",2*DEFBINS,0.,3.,2*DEFBINS,0.,3.);
 
   
     
@@ -179,23 +165,42 @@ void LoopOverTree(TChain *tchain)
     wt = *RFTimeWeight;
     
     //    if (wt==1.){
+
+    //Angles and van-Hove plots
+    X_P4 = *PiplusU_P4 + *Piminus1_P4 + *Piminus2_P4;
+    Delta_P4 = *Proton_P4 + *PiplusL_P4;
     
+    vanHoveXY_ppipLX->Fill(vanHoveX(*Proton_P4,*PiplusL_P4,X_P4),vanHoveY(*Proton_P4,*PiplusL_P4,X_P4),wt);    
+    vanHovePhiTheta_deltapippimpim->Fill(vanHovePhi(Delta_P4,*PiplusU_P4,*Piminus1_P4,*Piminus2_P4),vanHoveTheta(Delta_P4,*PiplusU_P4,*Piminus1_P4,*Piminus2_P4),wt);
+
+    
+    anglesGJ->Fill(*CosThetaPiminus1Bachelor_GJ,*PhiPiminus1Bachelor_GJ,wt);
+    anglesGJ->Fill(*CosThetaPiminus2Bachelor_GJ,*PhiPiminus2Bachelor_GJ,wt);
+
+    anglesHF->Fill(*CosThetaPiminus2Isobar_HF,*PhiPiminus2Isobar_HF,wt);  
+    anglesHF->Fill(*CosThetaPiminus1Isobar_HF,*PhiPiminus1Isobar_HF,wt);  
+
+    
+    
+    //Isobar mass and angles correlation to 3pi mass
     pipUpimpim_mass_vs_isobar_mass->Fill(*PiplusUPiminus1_M,*PiplusUPiminus1Piminus2_M,wt);
     pipUpimpim_mass_vs_isobar_mass->Fill(*PiplusUPiminus2_M,*PiplusUPiminus1Piminus2_M,wt);
 
     pipUpimpim_mass_vs_CosTheta_GJ->Fill(*CosThetaPiminus1Bachelor_GJ,*PiplusUPiminus1Piminus2_M,wt);
     pipUpimpim_mass_vs_CosTheta_GJ->Fill(*CosThetaPiminus2Bachelor_GJ,*PiplusUPiminus1Piminus2_M,wt);
+
     pipUpimpim_mass_vs_Phi_GJ->Fill(*PhiPiminus1Bachelor_GJ,*PiplusUPiminus1Piminus2_M,wt);
     pipUpimpim_mass_vs_Phi_GJ->Fill(*PhiPiminus2Bachelor_GJ,*PiplusUPiminus1Piminus2_M,wt);
 
     pipUpimpim_mass_vs_CosTheta_HF->Fill(*CosThetaPiminus2Isobar_HF,*PiplusUPiminus1Piminus2_M,wt);
     pipUpimpim_mass_vs_CosTheta_HF->Fill(*CosThetaPiminus1Isobar_HF,*PiplusUPiminus1Piminus2_M,wt);
+
     pipUpimpim_mass_vs_Phi_HF->Fill(*PhiPiminus2Isobar_HF,*PiplusUPiminus1Piminus2_M,wt);
     pipUpimpim_mass_vs_Phi_HF->Fill(*PhiPiminus1Isobar_HF,*PiplusUPiminus1Piminus2_M,wt);
 
 
     
-    
+    //Masses and angles correlation to momentum transfer    
     pipUpimpim_mass_vs_minust->Fill(*PiplusUPiminus1Piminus2_M,-*tvar,wt); 
     ppipL_mass_vs_minust->Fill(*PiplusLProton_M,-*tvar,wt);
     fourpion_mass_vs_minust->Fill(*FourPions_M,-*tvar,wt);
@@ -203,76 +208,49 @@ void LoopOverTree(TChain *tchain)
     pipUpim_mass_vs_minust->Fill(*PiplusUPiminus1_M,-*tvar,wt); 
     pipUpim_mass_vs_minust->Fill(*PiplusUPiminus2_M,-*tvar,wt); 
 
-    
-    
-    UV_P4 = *PiplusU_P4+*Piminus1_P4+*Piminus2_P4;      
-    vanHoveXY_ppipLX->Fill(vanHoveX(*Proton_P4,*PiplusL_P4,UV_P4),vanHoveY(*Proton_P4,*PiplusL_P4,UV_P4),wt);    
-
-
-    anglesGJ->Fill(*CosThetaPiminus1Bachelor_GJ,*PhiPiminus1Bachelor_GJ,wt);
-    anglesGJ->Fill(*CosThetaPiminus2Bachelor_GJ,*PhiPiminus2Bachelor_GJ,wt);
     anglesGJ_vs_minust->Fill(*CosThetaPiminus1Bachelor_GJ,*PhiPiminus1Bachelor_GJ,-*tvar,wt);
     anglesGJ_vs_minust->Fill(*CosThetaPiminus2Bachelor_GJ,*PhiPiminus2Bachelor_GJ,-*tvar,wt);
-
-
-    anglesHF->Fill(*CosThetaPiminus2Isobar_HF,*PhiPiminus2Isobar_HF,wt);  
-    anglesHF->Fill(*CosThetaPiminus1Isobar_HF,*PhiPiminus1Isobar_HF,wt);  
+    
     anglesHF_vs_minust->Fill(*CosThetaPiminus2Isobar_HF,*PhiPiminus2Isobar_HF,-*tvar,wt);
     anglesHF_vs_minust->Fill(*CosThetaPiminus1Isobar_HF,*PhiPiminus1Isobar_HF,-*tvar,wt);
-
-
-    /*
-    angles_p_vs_num->Fill(TMath::RadToDeg()*(*Proton_P4).Theta(),TMath::RadToDeg()*(*Proton_P4).Phi(),*NumUnusedTracks,wt);
-    angles_pipU_vs_num->Fill(TMath::RadToDeg()*(*PiplusU_P4).Theta(),TMath::RadToDeg()*(*PiplusU_P4).Phi(),*NumUnusedTracks,wt);
-    angles_pipL_vs_num->Fill(TMath::RadToDeg()*(*PiplusL_P4).Theta(),TMath::RadToDeg()*(*PiplusL_P4).Phi(),*NumUnusedTracks,wt);
-    angles_pim1_vs_num->Fill(TMath::RadToDeg()*(*Piminus1_P4).Theta(),TMath::RadToDeg()*(*Piminus1_P4).Phi(),*NumUnusedTracks,wt);
-    angles_pim2_vs_num->Fill(TMath::RadToDeg()*(*Piminus2_P4).Theta(),TMath::RadToDeg()*(*Piminus2_P4).Phi(),*NumUnusedTracks,wt);
-    */    
-
-
     
+
+    //Correlation between the two isobar masses
+    isobar1_mass_vs_isobar2_mass->Fill(*PiplusUPiminus1_M,*PiplusUPiminus2_M,wt);
+
+      
       //    }
       
     }
 
+
+  //Turn to zero bin entries in case they are negative  
+  RemoveNegativeBins(isobar1_mass_vs_isobar2_mass);
+  RemoveNegativeBins(vanHoveXY_ppipLX);
+  RemoveNegativeBins(vanHovePhiTheta_deltapippimpim);
+
+	  
+  //Write histograms
   pipUpimpim_mass_vs_isobar_mass->Write();
   pipUpimpim_mass_vs_CosTheta_GJ->Write();
   pipUpimpim_mass_vs_Phi_GJ->Write();
   pipUpimpim_mass_vs_CosTheta_HF->Write();
   pipUpimpim_mass_vs_Phi_HF->Write();
-
   
   pipUpimpim_mass_vs_minust->Write();
   pipUpim_mass_vs_minust->Write();
   ppipL_mass_vs_minust->Write();
   fourpion_mass_vs_minust->Write();
-
+  anglesGJ_vs_minust->Write();
+  anglesHF_vs_minust->Write();
   
   anglesGJ->Write();
   anglesHF->Write();
 
-
-  anglesGJ_vs_minust->Write();
-  anglesHF_vs_minust->Write();
-
+  isobar1_mass_vs_isobar2_mass->Write();
   vanHoveXY_ppipLX->Write();
-    
-
-  
-  /*
-  RemoveNegativeBins(angles_p_vs_num);
-  RemoveNegativeBins(angles_pipU_vs_num);
-  RemoveNegativeBins(angles_pipL_vs_num);
-  RemoveNegativeBins(angles_pim1_vs_num);
-  RemoveNegativeBins(angles_pim2_vs_num);
-
-  angles_p_vs_num->Write();
-  angles_pipU_vs_num->Write();
-  angles_pipL_vs_num->Write();
-  angles_pim1_vs_num->Write();
-  angles_pim2_vs_num->Write();
-  */
-    
+  vanHovePhiTheta_deltapippimpim->Write();  
+      
 }
 
 

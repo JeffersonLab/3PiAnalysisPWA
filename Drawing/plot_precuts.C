@@ -21,11 +21,28 @@ void plot_precuts()
 {
 
 
-   TFile *file = TFile::Open("/work/halld/home/ilbelov/DataSpring2017/flattree_2pip2pim_sum_30274_31057_precuts.root","READ");
-   TTree *tree = (TTree*) file->TFile::Get("kin");
-   if (!tree) return;
+  //   TFile *file1 = TFile::Open("/data/iltschi/ibelov/DataPhaseI/flattree_2pip2pim__sum_ALL_30274_31057_precuts.root","READ");
+  //   TFile *file2 = TFile::Open("/data/iltschi/ibelov/DataPhaseI/flattree_2pip2pim__sum_ALL_40856_42559_precuts.root","READ");
+  //   TFile *file3 = TFile::Open("/data/iltschi/ibelov/DataPhaseI/flattree_2pip2pim__sum_ALL_50685_51768_precuts.root","READ");
 
+   TFile *file1 = TFile::Open("/data/iltschi/ibelov/DataSpring2017/flattree_2pip2pim__sum_ALL_30274_31057_allcuts.root","READ");
+   TFile *file2 = TFile::Open("/data/iltschi/ibelov/DataSpring2018/flattree_2pip2pim__sum_ALL_40856_42559_allcuts.root","READ");
+   TFile *file3 = TFile::Open("/data/iltschi/ibelov/DataFall2018/flattree_2pip2pim__sum_ALL_50685_51768_allcuts.root","READ");
 
+   
+   //   TTree *tree = (TTree*) file->TFile::Get("kin");
+   //   if (!tree) return;
+
+  TChain *chain = new TChain("kin");
+  //  chain->Add("/data/iltschi/ibelov/DataPhaseI/flattree_2pip2pim__sum_ALL_30274_31057_precuts.root");
+  //  chain->Add("/data/iltschi/ibelov/DataPhaseI/flattree_2pip2pim__sum_ALL_40856_42559_precuts.root");
+  //  chain->Add("/data/iltschi/ibelov/DataPhaseI/flattree_2pip2pim__sum_ALL_50685_51768_precuts.root");
+
+  chain->Add("/data/iltschi/ibelov/DataSpring2017/flattree_2pip2pim__sum_ALL_30274_31057_allcuts.root");
+  chain->Add("/data/iltschi/ibelov/DataSpring2018/flattree_2pip2pim__sum_ALL_40856_42559_allcuts.root");
+  chain->Add("/data/iltschi/ibelov/DataFall2018/flattree_2pip2pim__sum_ALL_50685_51768_allcuts.root");
+
+  
   const Int_t DEFBINS = 200;
   
   TH1D *h_mmiss = new TH1D("h1","",DEFBINS,-0.04,0.04);
@@ -63,7 +80,7 @@ void plot_precuts()
    
    
  //******************Usage of TTreeReader*************************                                                                                                                 
-  TTreeReader *myReader = new TTreeReader(tree);
+  TTreeReader *myReader = new TTreeReader(chain);
   ULong64_t ientry,nevents = myReader->TTreeReader::GetEntries(true);
   
   
@@ -71,7 +88,7 @@ void plot_precuts()
   TTreeReaderValue <Double_t> mmiss(*myReader,"Miss_M2");
   TTreeReaderValue <Float_t> en(*myReader,"E_Beam");
   TTreeReaderValue <Double_t> chi2Ndof(*myReader,"Chi2Ndof");
-  TTreeReaderValue <Double_t> tvar(*myReader,"tvar_U1");
+  //  TTreeReaderValue <Double_t> tvar(*myReader,"tvar_U1");
   TTreeReaderValue <Double_t> pvz(*myReader,"PV_Meas_Z");
   TTreeReaderValue <Double_t> pvx(*myReader,"PV_Meas_X");
   TTreeReaderValue <Double_t> pvy(*myReader,"PV_Meas_Y");
@@ -85,7 +102,7 @@ void plot_precuts()
     while (myReader->Next()){
     ientry = myReader->GetCurrentEntry();
 
-    if (*tvar >= -2.) h_minust->Fill(-*tvar);
+    //    if (*tvar >= -2.) h_minust->Fill(-*tvar);
     h_mmiss->Fill(*mmiss);
     h_en->Fill(*en);
     h_chi2ndof->Fill(*chi2Ndof);
@@ -154,7 +171,7 @@ void plot_precuts()
       h_rftime->SetFillStyle(3005);
       h_rftime->Draw("HIST F");
       
-      //      canva4->Print("dt_rftime.pdf", "pdf");
+            canva4->Print("dt_rftime.pdf", "pdf");
       canva4->Close();
 
 
@@ -169,8 +186,9 @@ void plot_precuts()
       
       
 
-    file->Close();    
-
+    file1->Close();    
+    file2->Close();
+    file3->Close();    
 
 
 }

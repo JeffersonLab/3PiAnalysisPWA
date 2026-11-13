@@ -17,28 +17,47 @@ void defstyle(TH1 *dhisto)
     dhisto->SetLineWidth(2);
 
     //    dhisto->SetFillStyle(3005);//1001 //3005
-    //    dhisto->SetFillColor(kGray-2);
+    //    dhisto->SetFillColor(kGray);
 
     
 }
 
 
-void defstyle2(TH1 *dhisto)
+void defstyle1(TH1 *dhisto)
 {
-
   
     dhisto->SetMarkerSize(0.5);
     dhisto->SetMarkerStyle(20);
-    dhisto->SetMarkerColor(kGray);
+    dhisto->SetMarkerColor(kGray+1);
     dhisto->SetTitleOffset(0.8,"X");
     dhisto->SetTitleSize(0.08,"X");
     dhisto->SetTitleOffset(1.2,"Y");
     dhisto->SetTitleSize(0.04,"Y");
-    dhisto->SetLineColor(kGray);
+    dhisto->SetLineColor(kGray+1);
     dhisto->SetLineWidth(2);
 
-    //    dhisto->SetFillStyle(3005);//1001 //3005
-    //    dhisto->SetFillColor(kGray-2);
+    dhisto->SetFillStyle(3005);//1001 
+    dhisto->SetFillColor(kGray+1);
+
+}
+
+
+
+void defstyle2(TH1 *dhisto)
+{
+  
+    dhisto->SetMarkerSize(0.5);
+    dhisto->SetMarkerStyle(20);
+    dhisto->SetMarkerColor(kGray+2);
+    dhisto->SetTitleOffset(0.8,"X");
+    dhisto->SetTitleSize(0.08,"X");
+    dhisto->SetTitleOffset(1.2,"Y");
+    dhisto->SetTitleSize(0.04,"Y");
+    dhisto->SetLineColor(kGray+2);
+    dhisto->SetLineWidth(2);
+
+    dhisto->SetFillStyle(3004);//1001 
+    dhisto->SetFillColor(kGray+2);
 
     
 }
@@ -77,7 +96,7 @@ void print_angles2(const char *filename)
    gPad->SetTopMargin(0.08);   
    gPad->SetBottomMargin(0.14);   
    prodPhi->SetMinimum(0.);      
-   prodPhi->Draw("H");      
+   prodPhi->Draw("HF");      
    prodPhi->Draw("PE SAME");      
    canva->Print("prodPhi.pdf", "pdf");
    canva->Close();
@@ -104,43 +123,54 @@ void print_angles(const char *filename)
    TH1D *phiHF1 = (TH1D*)file->TFile::Get("PhiHF_Piminus1Bachelor");
    TH1D *phiHF2 = (TH1D*)file->TFile::Get("PhiHF_Piminus2Bachelor");
 
+
+   TH1D* phiGJ = (TH1D*) phiGJ1->Clone("phiGJ");
+   TH1D* phiHF = (TH1D*) phiHF1->Clone("phiHF");
+   TH1D* costhetaGJ = (TH1D*) costhetaGJ1->Clone("costhetaGJ");
+   TH1D* costhetaHF = (TH1D*) costhetaHF1->Clone("costhetaHF");
+
+
    
-   //   costhetaGJ1->Add(costhetaGJ2);
-   //   costhetaHF1->Add(costhetaHF2);
-   //  phiGJ1->Add(phiGJ2);
-   //  phiHF1->Add(phiHF2);
+    costhetaGJ->Add(costhetaGJ2);
+    costhetaHF->Add(costhetaHF2);
+    phiGJ->Add(phiGJ2);
+    phiHF->Add(phiHF2);
 
 
    //continue with four angles
 
-   defstyle(costhetaGJ1);
-   defstyle(costhetaHF1);
-   defstyle(phiGJ1);
-   defstyle(phiHF1);
+   defstyle1(costhetaGJ1);
+   defstyle1(costhetaHF1);
+   defstyle1(phiGJ1);
+   defstyle1(phiHF1);
    defstyle2(costhetaGJ2);
    defstyle2(costhetaHF2);
    defstyle2(phiGJ2);
    defstyle2(phiHF2);
-
+   defstyle(costhetaGJ);
+   defstyle(costhetaHF);
+   defstyle(phiGJ);
+   defstyle(phiHF);
+ 
 
    
-   costhetaGJ1->SetTitle("");
-   costhetaGJ1->GetXaxis()->SetTitle("cos#theta^{[GJ]}");
-   costhetaGJ1->GetYaxis()->SetTitle("");
+   costhetaGJ->SetTitle("");
+   costhetaGJ->GetXaxis()->SetTitle("cos#theta^{[GJ]}");
+   costhetaGJ->GetYaxis()->SetTitle("");
 
    
-   costhetaHF1->SetTitle("");
-   costhetaHF1->GetXaxis()->SetTitle("cos#theta^{[HF]}");
-   costhetaHF1->GetYaxis()->SetTitle("");
+   costhetaHF->SetTitle("");
+   costhetaHF->GetXaxis()->SetTitle("cos#theta^{[HF]}");
+   costhetaHF->GetYaxis()->SetTitle("");
 
 
-   phiGJ1->SetTitle("");
-   phiGJ1->GetXaxis()->SetTitle("#phi^{[GJ]}  [deg]");
-   phiGJ1->GetYaxis()->SetTitle("");
+   phiGJ->SetTitle("");
+   phiGJ->GetXaxis()->SetTitle("#phi^{[GJ]}  [deg]");
+   phiGJ->GetYaxis()->SetTitle("");
 
-   phiHF2->SetTitle("");
-   phiHF2->GetXaxis()->SetTitle("#phi^{[HF]}  [deg]");
-   phiHF2->GetYaxis()->SetTitle("");
+   phiHF->SetTitle("");
+   phiHF->GetXaxis()->SetTitle("#phi^{[HF]}  [deg]");
+   phiHF->GetYaxis()->SetTitle("");
 
    
     
@@ -161,44 +191,55 @@ void print_angles(const char *filename)
       TCanvas* canva1 = new TCanvas("c1","c1",15,10,400,300);
       gPad->SetTopMargin(0.08);   
       gPad->SetBottomMargin(0.14);   
-      costhetaHF1->SetMinimum(0.);      
-      costhetaHF1->Draw("H");      
-      costhetaHF1->Draw("PE SAME");      
-      costhetaHF2->Draw("H SAME");      
-      costhetaHF2->Draw("PE SAME");      
-      canva1->Print("costhetaHF.pdf", "pdf");
+      costhetaHF->SetMinimum(0.);      
+      costhetaHF->Draw("HIST");      
+      costhetaHF->Draw("PE SAME");      
+            costhetaHF1->Draw("HF SAME");      
+            costhetaHF1->Draw("PE SAME");      
+            costhetaHF2->Draw("HF SAME");      
+            costhetaHF2->Draw("PE SAME");      
+            canva1->Print("costhetaHF.pdf", "pdf");
       canva1->Close();
 
       TCanvas* canva2 = new TCanvas("c2","c2",15,10,400,300);
       gPad->SetTopMargin(0.08);   
       gPad->SetBottomMargin(0.14);   
-      costhetaGJ1->SetMinimum(0.);      
-      costhetaGJ1->Draw("H");
-      costhetaGJ1->Draw("PE SAME");
-      costhetaGJ2->Draw("H SAME");
-      costhetaGJ2->Draw("PE SAME");
-      canva2->Print("costhetaGJ.pdf", "pdf");
+      costhetaGJ->SetMinimum(0.);      
+      costhetaGJ->Draw("HIST");      
+      costhetaGJ->Draw("PE SAME");      
+            costhetaGJ1->Draw("HF SAME");      
+            costhetaGJ1->Draw("PE SAME");      
+            costhetaGJ2->Draw("HF SAME");      
+            costhetaGJ2->Draw("PE SAME");      
+            canva2->Print("costhetaGJ.pdf", "pdf");
       canva2->Close();
 
       TCanvas* canva3 = new TCanvas("c3","c3",15,10,400,300);
       gPad->SetTopMargin(0.08);   
       gPad->SetBottomMargin(0.14);   
-      phiHF2->SetMinimum(0.);      
-      phiHF2->Draw("H");      
-      phiHF2->Draw("PE SAME");      
-      phiHF1->Draw("H SAME");      
-      phiHF1->Draw("PE SAME");      
-      canva3->Print("phiHF.pdf", "pdf");
+      phiHF->SetMinimum(0.);      
+      phiHF->Draw("HIST");
+      phiHF->Draw("PE SAME");      
+            phiHF1->Draw("HF SAME");      
+            phiHF1->Draw("PE SAME");      
+            phiHF2->Draw("HF SAME");      
+            phiHF2->Draw("PE SAME");      
+            canva3->Print("phiHF.pdf", "pdf");
       canva3->Close();
 
       TCanvas* canva4 = new TCanvas("c4","c4",15,10,400,300);
       gPad->SetTopMargin(0.08);   
       gPad->SetBottomMargin(0.14);   
-      phiGJ1->SetMinimum(0.);
-      phiGJ1->Draw("H");      
-      //      phiGJ1->Draw("PE SAME");      
-      phiGJ2->Draw("H SAME");      
-      //    phiGJ2->Draw("PE SAME");      
+      // phiGJ->Scale(1./phiGJ->Integral()); 
+      phiGJ->SetMinimum(0.);
+      //phiGJ->SetMaximum(0.025);
+      phiGJ->Draw("HIST");
+      phiGJ->Draw("PE SAME");
+      gPad->Update();
+            phiGJ1->Draw("HF SAME");      
+            phiGJ1->Draw("PE SAME");      
+            phiGJ2->Draw("HF SAME");      
+            phiGJ2->Draw("PE SAME");      
       canva4->Print("phiGJ.pdf", "pdf");
       canva4->Close();
       

@@ -12,18 +12,18 @@ def main(argv):
 
     # SLURM INFO (see options at https://scicomp.jlab.org/scicomp/slurmJob/slurmInfo)
     ACCOUNT    = "afzalf2c_0000" 
-    PARTITION  = "cpu" #"gpu" #fat_gpu
+    PARTITION  = "cpu" #"fat_cpu" #gpu
     GPUTYPE    = "nvidia_h100" #H100 #A30
-    TIMELIMIT  = "48:00:00"   # Max walltime
-    RAMLIMIT   = 40          # Requested memory in GB
+    TIMELIMIT  = "48:00:00"  # Max walltime
+    RAMLIMIT   = 180         #180 or #40 # Requested memory in GB
     nGPUs      = 0           # Number of GPU cards used 
-    nCPUs      = 32           # Number of CPUs used by MPI (only with nGPUs=0)
+    nCPUs      = 22          #45 # Number of CPUs used by MPI (only with nGPUs=0)
 
     
     # FIT INFO
-    argFitName = "3PiBinnedFit"  #"TestH100"               
-    argFitType = "3PiFit_pipiIso_rhoBWIso_f2BWIso" 
-    argNumRand = 1000                   # set to 0 for likelihood scan 
+    argFitName = "FloatResMasses_a1_pi2" 
+    argFitType = "3PiFullFit"    #"3PiFitBinned25MeV"    # leave this 'type' for all fits using trees with 25MeV binning
+    argNumRand = 2                      # set to 0 for likelihood scan 
     argPrecision = "1.e-13"             # set to negative for MINUIT determined precision    
     argParamSeeds = "nofile.txt" #/lustre/... # initial parameter seeds from previous fit: used for likelihood scan or bootstrap
     argGPU = nGPUs
@@ -38,9 +38,9 @@ def main(argv):
         
     (options, args) = parser.parse_args(sys.argv)
     if options.channel:
-        argFitName = options.channel
+        argFitType = options.channel
     if options.fittype:
-        argFitType = options.fittype
+        argFitName = options.fittype
     if options.nrand:
         argNumRand = int(options.nrand)
     #if options.data:
@@ -74,30 +74,32 @@ def main(argv):
     template.close()
 
     
-    # Specify list of ranges
-    t_low =  [0.] 
+    # Specify list of ranges 
+    tbin = [0] 
+    t_low =  [0.00] 
     t_high = [0.25] 
 
 
-    mass_3pi_low  = [0.750,0.775,0.800,0.825,0.850,0.875,0.900,0.925,0.950,0.975,1.000,1.025,1.050,1.075,1.100,1.125,1.150,1.175,1.200,1.225,1.250,1.275,1.300,1.325,1.350,1.375,1.400,1.425,1.450,1.475,1.500,1.525,1.550,1.575,1.600,1.625,1.650,1.675,1.700,1.725,1.750,1.775,1.800,1.825]
-    mass_3pi_high = [0.775,0.800,0.825,0.850,0.875,0.900,0.925,0.950,0.975,1.000,1.025,1.050,1.075,1.100,1.125,1.150,1.175,1.200,1.225,1.250,1.275,1.300,1.325,1.350,1.375,1.400,1.425,1.450,1.475,1.500,1.525,1.550,1.575,1.600,1.625,1.650,1.675,1.700,1.725,1.750,1.775,1.800,1.825,1.850]
-    
-#    mass_3pi_low  = [0.750]
-#    mass_3pi_high = [0.775]
+    mass_3pi_low  = [1.200,1.225,1.250,1.275,1.300,1.325,1.350,1.375,1.400,1.425,1.450,1.475,1.500,1.525,1.550,1.575,1.600,1.625,1.650,1.675,1.700,1.725,1.750,1.775,1.800,1.825,0.750,0.775,0.800,0.825,0.850,0.875,0.900,0.925,0.950,0.975,1.000,1.025,1.050,1.075,1.100,1.125,1.150,1.175]
+    mass_3pi_high = [1.225,1.250,1.275,1.300,1.325,1.350,1.375,1.400,1.425,1.450,1.475,1.500,1.525,1.550,1.575,1.600,1.625,1.650,1.675,1.700,1.725,1.750,1.775,1.800,1.825,1.850,0.775,0.800,0.825,0.850,0.875,0.900,0.925,0.950,0.975,1.000,1.025,1.050,1.075,1.100,1.125,1.150,1.175,1.200]
+
+    mass_3pi_low   = [0.750]
+    mass_3pi_high  = [1.850]
+   
 
     
     # LOOP OVER T RANGES TO FIT
-    for argtLow,argtHigh in zip(t_low,t_high):
+    for argtbin,argtLow,argtHigh in zip(tbin,t_low,t_high):
 
         # LOOP OVER 3PI MASS RANGES TO FIT
         for argMass3PiLow,argMass3PiHigh in zip(mass_3pi_low,mass_3pi_high):
 
             
             # PREPARE DIRECTORIES AND CREATE THOSE THAT DON'T EXIST
-            subrange = "tbin0_m3pi_%.3f_%.3f" % (argMass3PiLow,argMass3PiHigh)
+            subrange = "tbin%d_m3pi_%.3f_%.3f" % (argtbin,argMass3PiLow,argMass3PiHigh)
 
-            argRunningDir = "%s/ampToolsFits/%s/%s" % (lustreDir,argFitName,subrange)
-            argInputTreesDir = "%s/ampToolsTrees/%s" % (lustreDir,argFitName)                            
+            argInputTreesDir = "%s/ampToolsTrees/%s" % (lustreDir,argFitType)            
+            argRunningDir = "%s/ampToolsFits/%s/%s/%s" % (lustreDir,argFitType,argFitName,subrange)
             thisLogDir = argRunningDir + "/log" 
                 
             if not os.path.exists(argRunningDir):
@@ -109,11 +111,11 @@ def main(argv):
 
                             
             # PREPARE NAMES
-            STUBNAME = argFitName + "_%s" % (subrange)
+            STUBNAME = argFitType + "_%s" % (subrange)
             JOBNAME = STUBNAME
 
             # SCRIPT COMMANDS
-            SCRIPT_COMMAND = EXECUTE_SCRIPT + " %s %d %s %d %s" % (argVersion,argGPU,argCodeDir,argNumRand,argPrecision) + " %s %s %s" % (argInputDataDirA,argInputMCphspDirA,argPeriodA) + " %s %s %s" % (argInputDataDirB,argInputMCphspDirB,argPeriodB) + " %s %s %s" % (argInputDataDirC,argInputMCphspDirC,argPeriodC)  + " %s %s" % (argInputTreesDir,argRunningDir) + " %.3f %.3f %.3f %.3f" % (argtLow,argtHigh,argMass3PiLow,argMass3PiHigh) + " \n"
+            SCRIPT_COMMAND = EXECUTE_SCRIPT + " %s %d %s %d %s" % (argVersion,argGPU,argCodeDir,argNumRand,argPrecision) + " %s %s %s" % (argInputDataDirA,argInputMCphspDirA,argPeriodA) + " %s %s %s" % (argInputDataDirB,argInputMCphspDirB,argPeriodB) + " %s %s %s" % (argInputDataDirC,argInputMCphspDirC,argPeriodC)  + " %s %s" % (argInputTreesDir,argRunningDir) + " %d %.3f %.3f %.3f %.3f" % (argtbin,argtLow,argtHigh,argMass3PiLow,argMass3PiHigh) + " \n"
             
 
             slurmOut = open("tempSlurm.txt",'w')
@@ -129,11 +131,11 @@ def main(argv):
             elif nGPUs == 1:
                 slurmOut.write("#SBATCH --ntasks=1 \n")  
                 slurmOut.write("#SBATCH --gpus=1 \n") 
-                slurmOut.write("#SBATCH --cpus-per-gpu=6 \n")
+                slurmOut.write("#SBATCH --cpus-per-gpu=6 \n") 
             else:
                 slurmOut.write("#SBATCH --ntasks=%d \n" % (nGPUs+1))  
                 slurmOut.write("#SBATCH --gpus=%d \n" % (nGPUs)) 
-                slurmOut.write("#SBATCH --cpus-per-gpu=2 \n")
+                slurmOut.write("#SBATCH --cpus-per-gpu=6 \n") 
                 
                 
 #           slurmOut.write("#SBATCH --constraint=el9 \n") #not relevant on Elysium                

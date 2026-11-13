@@ -5,3 +5,4 @@ scontrol show job $JOBID
 scontrol show node $NODEID
 sacct -u $USERID --starttime=now-14days
 sacct -j $JOBID --format=JobID%20,State%12,ExitCode%10,Elapsed%12,MaxRSS%12,AveRSS%12,StdOut%110
+sinfo -N -o "%N %C %T"

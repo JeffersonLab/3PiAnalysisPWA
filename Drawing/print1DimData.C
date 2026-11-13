@@ -36,19 +36,20 @@ void setstyle(TH1D *dhisto, TLegend *leg)
 {
 
     leg->AddEntry(dhisto,"  Data","p");
-    
 
-    
-    dhisto->SetMarkerSize(0.5);
-    dhisto->SetMarkerStyle(20);
     dhisto->SetTitleOffset(0.9,"X");
-    dhisto->SetTitleSize(0.05,"X");
-    dhisto->SetTitleOffset(1.2,"Y");
-    dhisto->SetTitleSize(0.04,"Y"); 
-    dhisto->SetLineColor(kBlack);
-    dhisto->SetLineWidth(2);    
-
+    dhisto->SetTitleSize(0.06,"X");
+    dhisto->SetTitleOffset(0.9,"Y");
+    dhisto->SetTitleSize(0.06,"Y"); 
     
+    dhisto->SetMarkerSize(0.6);
+    dhisto->SetMarkerStyle(20);
+    dhisto->SetMarkerColor(kBlack);
+    dhisto->SetLineColor(kBlack);
+    dhisto->SetLineWidth(2);           
+    graph->SetFillStyle(3005);  //1001 
+    graph->SetFillColor(kRed+1);
+
 }
 
 
@@ -57,19 +58,17 @@ void setstyle(TH1D *dhisto, TLegend *leg)
 
 
 
-void print1DimData()
+void print1DimData(const char *datafilename = "histos_data_spring2017_precuts_diffpipluscut_deltacut_fourpionscut_piminuscut.root";)
 {
-
 
   //  const char *datafilename = "Different_com_cuts/histos_data_spring2017_precuts_diffpipluscut_deltacut_fourpionscut_3picomcut1p0.root";
   //  const char *datafilename = "histos_data_spring2017_precuts_deltacut.root";
   //  const char *datafilename = "histos_data_spring2017_precuts.root";
   //  const char *datafilename = "histos_data_spring2017_precuts_diffpipluscut_fourpionscut_piminuscut.root";
   //  const char *datafilename = "histos_data_spring2017_precuts_diffpipluscut_deltacut_fourpionscut_piminuscut1p0.root";
-  const char *datafilename = "histos_data_spring2017_precuts_diffpipluscut_deltacut_fourpionscut_piminuscut.root";
   //  const char *datafilename = "histos_data_spring2017_precuts_diffpipluscut_deltacut.root";
   //  const char *datafilename = "histos_data_spring2017_precuts_diffpipluscut_deltacut_fourpionscut.root";
-  std::string dirname = "Data_precuts_diffpipluscut_fourpionscut_piminuscut";
+  std::string dirname = "Gen_PWs";
 
   
 
@@ -80,14 +79,14 @@ void print1DimData()
    if (!datafile) return;
 
    
-   std::string variables[25] = {"minustvar","Piminus1Proton_M","Piminus2Proton_M","PiplusLPiplusUPiminus1_M","PiplusLPiplusUPiminus2_M","ProtonPiplusUPiminus1_M","ProtonPiplusUPiminus2_M","ProtonPiplusLPiminus1_M","ProtonPiplusLPiminus2_M","ProtonPiplusUPiminus1Piminus2_M","ProtonPiplusLPiminus1Piminus2_M","ProtonPiplusLPiplusUPiminus1_M","ProtonPiplusLPiplusUPiminus2_M","FourPions_M","DeltaPhi_LV_UV","DeltaTheta_LV_UV","Miss_M2","PiplusL_P","Piminus2_Pz","PiplusLPiminus1_M","PiplusLPiminus2_M","PiplusLProton_M","PiplusUPiminus1_M","PiplusUPiminus2_M","PiplusUPiminus1Piminus2_M"};
+   std::string variables[25] = {"PiplusLProton_M","PiplusUPiminus1Piminus2_M","PiplusUPiminus1_M","PiplusUPiminus2_M","minustvar","Piminus1Proton_M","Piminus2Proton_M","PiplusLPiplusUPiminus1_M","PiplusLPiplusUPiminus2_M","ProtonPiplusUPiminus1_M","ProtonPiplusUPiminus2_M","ProtonPiplusLPiminus1_M","ProtonPiplusLPiminus2_M","ProtonPiplusUPiminus1Piminus2_M","ProtonPiplusLPiminus1Piminus2_M","ProtonPiplusLPiplusUPiminus1_M","ProtonPiplusLPiplusUPiminus2_M","FourPions_M","DeltaPhi_LV_UV","DeltaTheta_LV_UV","Miss_M2","PiplusL_P","Piminus2_Pz","PiplusLPiminus1_M","PiplusLPiminus2_M","PiplusUPiminus1Piminus2_M"};
    std::string outpdf;
 
    
    TH1D *var_data = new TH1D();
 
   
-   for (int i=0; i<25; i++){
+   for (int i=0; i<5; i++){
    
      outpdf = dirname+"/pic_"+variables[i]+".pdf";
      const char *title = variables[i].c_str();      

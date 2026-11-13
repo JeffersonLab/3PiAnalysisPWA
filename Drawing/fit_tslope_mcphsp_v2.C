@@ -192,7 +192,7 @@ void fit_tslope_mcphsp()
   //Define the fit range and normalize templates by an integal value
   lfit = var_data->GetXaxis()->FindBin(0.1);
   rfit = var_data->GetXaxis()->FindBin(2.);
-  const char *title = "ML bin fit in the [0.1,2] range";
+  const char *title = "Least square fit in the [0.1,2] range";
 
 
 

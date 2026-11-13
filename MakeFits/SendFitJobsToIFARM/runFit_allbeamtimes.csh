@@ -27,10 +27,12 @@ setenv argRunRangeC ${14}
 
 setenv argFitResDir ${15}
 setenv argLinksDir ${16}
-setenv argtLow ${17}
-setenv argtHigh ${18}
-setenv argM3PiLow ${19}
-setenv argM3PiHigh ${20}
+
+setenv argtbin ${17}
+setenv argtLow ${18}
+setenv argtHigh ${19}
+setenv argM3PiLow ${20}
+setenv argM3PiHigh ${21}
 
 
 
@@ -56,7 +58,7 @@ endif
 
 # copy scripts to working directory
 cp ${argCodeDir}/prepare_allcuts.py .
-cp ${argCodeDir}/template_3PiDelta.cfg .
+cp ${argCodeDir}/fulltemplate_3PiDelta.cfg .
 
 # copy parameter seeds for likelihood scan or bootstrap
 #cp $argParamSeeds seed.txt
@@ -67,20 +69,20 @@ ls -lhtr
 
 
 # Define subrange 
-set subrange = `printf "tbin0_m3pi_%.3f_%.3f" ${argM3PiLow} ${argM3PiHigh}`
+set subrange = `printf "tbin%d_m3pi_%.3f_%.3f" ${argtbin} ${argM3PiLow} ${argM3PiHigh}`
 
 echo "Passed to the inner 'prepare_allcuts.py' script:"
-echo " ${argDataDirA}  ${argMCphspDirA}  ${argFitResDir}  ${argLinksDir}  ${argRunRangeA}  ${argtLow} ${argtHigh}  ${argM3PiLow}  ${argM3PiHigh}  "
+echo " ${argDataDirA}  ${argMCphspDirA}  ${argFitResDir}  ${argLinksDir}  ${argRunRangeA} ${argtbin} ${argtLow} ${argtHigh}  ${argM3PiLow}  ${argM3PiHigh}  "
 
 
 # prepare input trees for Spring-2017, Spring-2018 and Fall-2018 (use A,B,C for the beamtimes)
-python prepare_allcuts.py $argDataDirA  $argMCphspDirA  $argFitResDir  $argLinksDir  $argRunRangeA  $argtLow $argtHigh  $argM3PiLow  $argM3PiHigh  
-python prepare_allcuts.py $argDataDirB  $argMCphspDirB  $argFitResDir  $argLinksDir  $argRunRangeB  $argtLow $argtHigh  $argM3PiLow  $argM3PiHigh  
-python prepare_allcuts.py $argDataDirC  $argMCphspDirC  $argFitResDir  $argLinksDir  $argRunRangeC  $argtLow $argtHigh  $argM3PiLow  $argM3PiHigh  
+python prepare_allcuts.py $argDataDirA  $argMCphspDirA  $argFitResDir  $argLinksDir  $argRunRangeA $argtbin $argtLow $argtHigh  $argM3PiLow  $argM3PiHigh  
+python prepare_allcuts.py $argDataDirB  $argMCphspDirB  $argFitResDir  $argLinksDir  $argRunRangeB $argtbin $argtLow $argtHigh  $argM3PiLow  $argM3PiHigh  
+python prepare_allcuts.py $argDataDirC  $argMCphspDirC  $argFitResDir  $argLinksDir  $argRunRangeC $argtbin $argtLow $argtHigh  $argM3PiLow  $argM3PiHigh  
 
     
 # prepare a config file using the template
-set cfgTemplate = "template_3PiDelta.cfg"
+set cfgTemplate = "fulltemplate_3PiDelta.cfg"
 set cfgfile = "3PiDelta__${subrange}.cfg"
 sed 's|$PATH|'${argLinksDir}'|g; s|$SUBRANGE|'${subrange}'|g' "${cfgTemplate}" > "${cfgfile}"
                 

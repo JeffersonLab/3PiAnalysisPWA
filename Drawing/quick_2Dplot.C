@@ -5,14 +5,10 @@
 void defstyle(TH2D *histo)
 {
 
-    histo->SetMarkerSize(0.5);
-    histo->SetMarkerStyle(20);
-    histo->SetTitleOffset(1.0,"X");
-    histo->SetTitleSize(0.06,"X");
-    histo->SetTitleOffset(0.9,"Y");
-    histo->SetTitleSize(0.05,"Y"); 
-    histo->SetLineColor(kBlack);
-    histo->SetLineWidth(2);    
+  histo->SetTitleSize(0.6,"X");
+  histo->SetTitleOffset(0.8,"X");
+  histo->SetTitleSize(0.6,"Y");
+  histo->SetTitleOffset(0.5,"Y");
 
     
  }
@@ -21,17 +17,32 @@ void defstyle(TH2D *histo)
 
 
 
-void quick_2Dplot(const char *filename, const char *var)
+void quick_2Dplot(const char *filename, const char *var = "PiplusUPiminusPiminus_mass_vs_PiplusUPiminus_mass")
 {
   std::string pdfname = var;
   pdfname +=".pdf";
   
-  //vanHoveXY_for_ppipLX"
+  
    gROOT->SetBatch(kTRUE);  
+   gStyle->SetPalette(kViridis);
+
    
    TFile *file = TFile::Open(filename,"READ");
    if (!file) return;
- 
+
+   TH2D *histo = (TH2D*)file->TFile::Get(var);
+   defstyle(histo);
+
+
+   histo->SetTitle("");
+   histo->GetXaxis()->SetTitle("m(2#pi)  [GeV]");
+   histo->GetYaxis()->SetTitle("m(3#pi)  [GeV]");
+   histo->GetXaxis()->SetRangeUser(0.,2.5);
+   histo->GetYaxis()->SetRangeUser(0.,2.5);
+
+   
+   /*
+     // This is to draw multiplicity for our reaction
    TH2D *histo = (TH2D*)file->TFile::Get(var);
 
    histo->SetTitle("");
@@ -47,18 +58,19 @@ void quick_2Dplot(const char *filename, const char *var)
    histo->GetXaxis()->SetBinLabel(6,"#pi^{-}_{slow}");
 
    defstyle(histo);
-   
+   */
     
     /*    
+    // This is to draw 3-body Van Hove plot	  
     defstyle(piplusL_theta); piplusL_theta->SetLineColor(kMagenta); piplusL_theta->SetFillStyle(3005); piplusL_theta->SetFillColor(kMagenta);
     piplus1_theta->GetXaxis()->SetRangeUser(0.,150.);
 
     TLegend *leg1 = new TLegend(0.7,0.6,0.9,0.9); //0.74, 0.75
     leg1->AddEntry(piplusU_mag,"  #pi^{+}_{U},    MC True ","f");    
     leg1->AddEntry(piplus2_mag,"  #pi^{+}_{slow}, MC Reco ","f");
-    */
 
-   /*    
+
+
       double x = 5/2./TMath::Sqrt(3.);
       TLine *line0deg = new TLine(-2.5,0.,2.5,0.);
       TLine *line120deg = new TLine(-x,2.5,x,-2.5);
@@ -76,16 +88,17 @@ void quick_2Dplot(const char *filename, const char *var)
 
       
       gStyle->SetOptStat(0);
-      gStyle->SetTextSize(0.05);
+      //      gStyle->SetTextSize(0.05);
 
       
       TCanvas* canva = new TCanvas("c1","c1",15,10,400,300);
       //      gPad->SetBottomMargin(0.26);   
       //      gPad->SetLeftMargin(0.08);
-      gPad->SetRightMargin(0.12);
-
+      //      gPad->SetRightMargin(0.12);
+      gPad->SetLogz();
 
       histo->Draw("COLZ");
+      gPad->Update();
       //      leg1->Draw("SAME");
 
       /*      

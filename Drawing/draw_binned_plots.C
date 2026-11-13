@@ -57,50 +57,10 @@ void setstyle(TH1D *dhisto)
 void draw_allbins(TH1D **histo, int NN, double offset, const char *axisname, const char *pdfname)
 {
   
-
-    TPaveText *ptw1 = new TPaveText(0.68,0.22,0.83,0.32,"NDC");
-    ptw1->AddText("1075 MeV\n");
-    ptw1->SetTextSize(0.06);
-    ptw1->SetBorderSize(0);
-    ptw1->SetFillStyle(0);
-
-    TPaveText *ptw2 = new TPaveText(0.68,0.3,0.83,0.4,"NDC");
-    ptw2->AddText("1125 MeV\n");
-    ptw2->SetTextSize(0.06);
-    ptw2->SetBorderSize(0);
-    ptw2->SetFillStyle(0);
-    
-    TPaveText *ptw3 = new TPaveText(0.68,0.37,0.83,0.47,"NDC");
-    ptw3->AddText("1175 MeV\n");
-    ptw3->SetTextSize(0.06);
-    ptw3->SetBorderSize(0);
-    ptw3->SetFillStyle(0);
-  
-    TPaveText *ptw4 = new TPaveText(0.68,0.44,0.83,0.54,"NDC");
-    ptw4->AddText("1225 MeV\n");
-    ptw4->SetTextSize(0.06);
-    ptw4->SetBorderSize(0);
-    ptw4->SetFillStyle(0);
-
-    TPaveText *ptw5 = new TPaveText(0.68,0.51,0.83,0.61,"NDC");
-    ptw5->AddText("1275 MeV\n");
-    ptw5->SetTextSize(0.06);
-    ptw5->SetBorderSize(0);
-    ptw5->SetFillStyle(0);
-
-    
-    TPaveText *ptw6 = new TPaveText(0.68,0.58,0.83,0.68,"NDC");
-    ptw6->AddText("1325 MeV\n");
-    ptw6->SetTextSize(0.06);
-    ptw6->SetBorderSize(0);
-    ptw6->SetFillStyle(0);
-
-    
-
   //  char const *trange[6] = {"0 #leq -t #leq 2 GeV^{2}","0 #leq -t #leq 0.25 GeV^{2}","0.25 GeV^{2} #leq -t #leq 0.5 GeV^{2}","0.5 GeV^{2} #leq -t #leq 0.75 GeV^{2}","0.75 GeV^{2} #leq -t #leq 1 GeV^{2}","1 GeV^{2} #leq -t #leq 2 GeV^{2}"};
 
-
-    
+  float textval = 1475;
+  TPaveText *ptw[NN];    
   TCanvas *canva = new TCanvas("canva","canva",15,10,400,1100);
 
   gPad->SetBottomMargin(0.09);
@@ -111,7 +71,15 @@ void draw_allbins(TH1D **histo, int NN, double offset, const char *axisname, con
   
   for (int jj=NN-1; jj>-1; jj--){
 
-       
+    textval -= 25;
+
+    ptw[jj] = new TPaveText(0.69,0.07+jj*0.073,0.84,0.17+jj*0.073,"NDC");
+    ptw[jj]->AddText(Form("%.f MeV\n",textval+12.5));
+    ptw[jj]->SetTextSize(0.06);
+    ptw[jj]->SetBorderSize(0);
+    ptw[jj]->SetFillStyle(0);
+
+    
     // Remove vertical gaps and sign the axis in the bottom
     //     gPad->SetFrameBorderMode(0);
     //    gPad->SetFrameLineWidth(0);
@@ -126,18 +94,13 @@ void draw_allbins(TH1D **histo, int NN, double offset, const char *axisname, con
     hline->SetLineColor(kGray); hline->SetLineWidth(2); hline->SetLineStyle(kDashed);
     hline->Draw(jj==NN-1 ? "" : "SAME");
 
+    if (strcmp(pdfname, "Binned_2pi_mass_tbin0.pdf") == 0)  ptw[jj]->Draw("SAME");
+    
   }
 
   canva->Update();  
 
-  if (strcmp(pdfname, "Binned_2pi_mass_tbin0.pdf") == 0){
-  ptw1->Draw("SAME");
-  ptw2->Draw("SAME");
-  ptw3->Draw("SAME");
-  ptw4->Draw("SAME");
-  ptw5->Draw("SAME");
-  ptw6->Draw("SAME");
-  }
+   
   
   canva->SaveAs(pdfname,"pdf");
   canva->Close();
@@ -155,6 +118,7 @@ void draw_binned_plots()
 {
 
   const Int_t NB=11;
+  const Double_t MIN = 1.200;
   
   //The file with 2D histograms
   const char *datafilename = "Histos2026/correlations_data_phaseI_allcuts_tbin0.root";
@@ -172,7 +136,7 @@ void draw_binned_plots()
  TH1D *h1d_m3pi = (TH1D*) h2d_data_m3pi_vs_m2pi->ProjectionY("data_3pi_overall",0,-1);
 
  
- 
+
  Double_t m3pi_left, m3pi_right;
  Double_t offset = 0.6; //0.5 for 14 plots
  Int_t bin_left,bin_right,nbins;
@@ -184,8 +148,8 @@ void draw_binned_plots()
   
      for (int i=0; i<NB; i++){
 
-       m3pi_left = 1.0+0.05*i;
-       m3pi_right = 1.0+0.05*(i+1);
+       m3pi_left = MIN+0.025*i;
+       m3pi_right = MIN+0.025*(i+1);
 
        
        //Take 1dim histograms as projections

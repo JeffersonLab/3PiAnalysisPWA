@@ -11,7 +11,7 @@ void skimTree(){
   
   std::string fitdir = "/work/halld/home/ilbelov/TreesFitted/tbin0_m3pitestbin";
   std::string datadir = "/data/iltschi/ibelov/DataSpring2018";
-  std::string mcsigdir = "/data/iltschi/ibelov/MCphspSpring2018/mask010";
+  std::string mcsigdir = "/lustre/beloviq2/MCsignal_partial_waves";
   std::string mccombdir = "/work/halld/home/ilbelov/MCcombSpring2017";
 
   
@@ -24,11 +24,14 @@ void skimTree(){
   const char *fourpionscut = "FourPions_M >= 1.8";
   const char *piminuscut = "Piminus2_P4.Pz() >= 0.7";
   const char *cuts = "DiffMomPiplus >= 0.4 && tvar >= -2. && FourPions_M >= 1.8 && Piminus2_P4.Pz() >= 0.7";
-  const char *allcuts = "DiffMomPiplus >= 0.4 && PiplusLProton_M >= 1.15 && PiplusLProton_M <= 1.35 && tvar >= -2. && FourPions_M >= 1.8 && Piminus2_P4.Pz() >= 0.7";
+  const char *allcuts = "PiplusLProton_M >= 1.15 && PiplusLProton_M <= 1.35 && tvar >= -2. && DiffMomPiplus >= 0.4 && FourPions_M >= 1.8 && Piminus2_P4.Pz() >= 0.7";
 
   const char *tcut = "tvar >= -0.25";  
-  const char *ALLCUTS = "Chi2Ndof <= 5. && NumUnusedTracks <= 1 && DiffMomPiplus >= 0.4 && PiplusLProton_M >= 1.15 && PiplusLProton_M <= 1.35 && tvar >= -2. && FourPions_M >= 1.8 && Piminus2_P4.Pz() >= 0.7";
+  const char *temporary = "Chi2Ndof <= 5. && NumUnusedTracks <= 1 && tvar >= -2. && DiffMomPiplus >= 0.4 && FourPions_M >= 1.8 && Piminus2_P4.Pz() >= 0.7";
+  const char *ALLCUTS = "Chi2Ndof <= 5. && NumUnusedTracks <= 1 && PiplusLProton_M >= 1.15 && PiplusLProton_M <= 1.35 && tvar >= -2. && DiffMomPiplus >= 0.4 && FourPions_M >= 1.8 && Piminus2_P4.Pz() >= 0.7";
 
+
+  
   const char *testbincut = "tvar >= -0.25 && PiplusUPiminus1Piminus2_M >= 1.2 && PiplusUPiminus1Piminus2_M <= 1.3";  
   const char *extracut = "PiplusUPiminus1_M >= 0.5  && PiplusUPiminus1_M <= 1.1 && PiplusUPiminus2_M >= 0.5 && PiplusUPiminus2_M <= 1.1";
 
@@ -63,16 +66,16 @@ void skimTree(){
 */
 
   
-  //    cutter("mctree_2pip2pim_sig_3slopes__sum_30274_31057.root","kin","_precuts.root",mccombdir,mccombdir,precuts);  
+   cutter("mcsigtree_36waves_pi0_a1_a2_pi2__sum_30274_31057_precuts.root","kin","_cuts.root",mcsigdir,mcsigdir,cuts);  
+   
 
-  
-
+  /*
     cutter("mctree_pippippimpim_phsp_mask010__sum_ALL_40856_42559_allcuts.root","kin","_AMO.root",mcsigdir,mcsigdir,amocut);
     cutter("mctree_pippippimpim_phsp_mask010__sum_ALL_40856_42559_allcuts.root","kin","_PARA_0.root",mcsigdir,mcsigdir,para0cut);
     cutter("mctree_pippippimpim_phsp_mask010__sum_ALL_40856_42559_allcuts.root","kin","_PARA_135.root",mcsigdir,mcsigdir,para135cut);
     cutter("mctree_pippippimpim_phsp_mask010__sum_ALL_40856_42559_allcuts.root","kin","_PERP_45.root",mcsigdir,mcsigdir,perp45cut);
     cutter("mctree_pippippimpim_phsp_mask010__sum_ALL_40856_42559_allcuts.root","kin","_PERP_90.root",mcsigdir,mcsigdir,perp90cut);
-
+  */
   
     //  cutter("bggentree_pippippimpim__B2__sum_30274_31057.root","kin","_allcuts_nounusedtrackscut.root","/work/halld/home/ilbelov/MCbggenSpring2017","/work/halld/home/ilbelov/MCbggenSpring2017",allcuts);
  

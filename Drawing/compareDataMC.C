@@ -53,10 +53,10 @@ void compareDataMC(const char *variable)
 
   TString output = "Comp_DataMC/pic_"+TString(variable)+".pdf";
   
-   const char *filename0 = "histos_data_spring2017.root";
+   const char *filename0 = "histos_data_fall2018.root";
 
-   const char *datafilename = "histos_data_spring2017_after_slowpiminuscut.root";
-   const char *mcfilename = "histos_mc_spring2017_after_slowpiminuscut.root";
+   const char *datafilename = "Histos2026/histos_data_fall2018_allcuts.root";
+   const char *mcfilename = "Histos2026/histos_mc_fall2018_allcuts.root";
 
    
    
@@ -88,10 +88,10 @@ void compareDataMC(const char *variable)
 
     
     
-    //    canva->Print(output,"pdf");
+    canva->Print(output,"pdf");
     
-
-    //    datafile->Close();
-    //    mcfile->Close();
+    canva->Close();
+    datafile->Close();
+    mcfile->Close();
     
 }

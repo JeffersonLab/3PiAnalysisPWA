@@ -38,13 +38,11 @@ void setstyle(TH1D *dhisto, TH1D *dhisto2)
     dhisto->SetMarkerStyle(20);
     dhisto->SetMarkerColor(kBlack);
     dhisto->SetTitleOffset(1.0,"X");
-    dhisto->SetTitleSize(0.05,"X");
+    dhisto->SetTitleSize(0.07,"X");
     dhisto->SetTitleOffset(1.2,"Y");
     dhisto->SetTitleSize(0.04,"Y"); 
     dhisto->SetLineColor(kBlack);
     dhisto->SetLineWidth(2);    
-    //    dhisto->SetFillColor(kBlue-7);
-    //    dhisto->SetFillStyle(3016);
 
 
     dhisto2->SetMarkerSize(0.4);
@@ -52,6 +50,8 @@ void setstyle(TH1D *dhisto, TH1D *dhisto2)
     dhisto2->SetMarkerColor(kRed+2);
     dhisto2->SetLineColor(kRed+2);
     dhisto2->SetLineWidth(2);    
+    dhisto2->SetFillColor(kRed-8);
+    dhisto2->SetFillStyle(3003);
 
 
 }
@@ -64,7 +64,7 @@ void draw_bin(TH1D *h_ppip_1, TH1D *h_ppip_2, TH1D *h_3pi_1, TH1D *h_3pi_2, TH1D
 {
 
   std::string bin_num = Form("%d",i);
-  std::string pdfname = "FitDeltaMass/bin"+bin_num+"_compare.pdf";
+  std::string pdfname = "BinnedFigures/bin"+bin_num+"_compare.pdf";
 
   setstyle(h_ppip_1,h_ppip_2);
   setstyle(h_3pi_1,h_3pi_2);
@@ -72,38 +72,38 @@ void draw_bin(TH1D *h_ppip_1, TH1D *h_ppip_2, TH1D *h_3pi_1, TH1D *h_3pi_2, TH1D
 
 
   h_ppip_1->SetTitle(Form("%s",title));
-  h_ppip_1->GetXaxis()->SetTitle("m(p#pi^{+}(lv))  [GeV]");
+  h_ppip_1->GetXaxis()->SetTitle("m(p#pi^{+})  [GeV]"); 
   h_ppip_1->GetXaxis()->SetRangeUser(0.8,3.);
 
 
   
-  h_2pi_1->GetXaxis()->SetTitle("m(#pi^{+}(uv)#pi^{-})  [GeV]");
-  h_3pi_1->GetXaxis()->SetTitle("m(#pi^{+}(uv)#pi^{-}#pi^{-})  [GeV]");
+  h_2pi_1->GetXaxis()->SetTitle("m(2#pi)  [GeV]"); //#pi^{+}(uv)#pi^{-}
+  h_3pi_1->GetXaxis()->SetTitle("m(3#pi)  [GeV]"); //#pi^{+}(uv)#pi^{-}#pi^{-}
 
 
 
   
-    TPaveText *ptw = new TPaveText(0.55,0.68,0.7,0.78,"NDC");
+    TPaveText *ptw = new TPaveText(0.59,0.68,0.74,0.78,"NDC");
     ptw->AddText("#bf{#pi}_{2}(1670), #bf{#pi}_{1}(1600) ?\n");
-    ptw->SetTextSize(0.04);
+    ptw->SetTextSize(0.06);
     ptw->SetBorderSize(0);
     ptw->SetFillStyle(0);
 
-    TPaveText *pte = new TPaveText(0.42,0.4,0.52,0.5,"NDC");
+    TPaveText *pte = new TPaveText(0.45,0.4,0.55,0.5,"NDC");
     pte->AddText("f_{2}(1270)\n");
-    pte->SetTextSize(0.04);
+    pte->SetTextSize(0.08);
     pte->SetBorderSize(0);
     pte->SetFillStyle(0);
 
-    TPaveText *ptr = new TPaveText(0.45,0.75,0.55,0.85,"NDC");
+    TPaveText *ptr = new TPaveText(0.5,0.75,0.6,0.85,"NDC");
     ptr->AddText("a_{2}(1320)\n");
-    ptr->SetTextSize(0.04);
+    ptr->SetTextSize(0.08);
     ptr->SetBorderSize(0);
     ptr->SetFillStyle(0);
 
-    TPaveText *pts = new TPaveText(0.35,0.75,0.45,0.85,"NDC");
+    TPaveText *pts = new TPaveText(0.38,0.75,0.48,0.85,"NDC");
     pts->AddText("#rho(770)\n");
-    pts->SetTextSize(0.04);
+    pts->SetTextSize(0.08);
     pts->SetBorderSize(0);
     pts->SetFillStyle(0);
 
@@ -115,7 +115,7 @@ void draw_bin(TH1D *h_ppip_1, TH1D *h_ppip_2, TH1D *h_3pi_1, TH1D *h_3pi_2, TH1D
   canva->Divide(1,3);
 
   canva->cd(1);
-  gPad->SetBottomMargin(0.11);
+  gPad->SetBottomMargin(0.15);
   h_ppip_1->Draw("*H");
   h_ppip_2->Draw("*H SAME");
   gPad->Update();
@@ -129,25 +129,23 @@ void draw_bin(TH1D *h_ppip_1, TH1D *h_ppip_2, TH1D *h_3pi_1, TH1D *h_3pi_2, TH1D
 
 
 
-  
-  
   canva->cd(2);
-  gPad->SetBottomMargin(0.11);
+  gPad->SetBottomMargin(0.15);
   h_3pi_1->Draw("*H");
   h_3pi_2->Draw("*H SAME");
-  if (i==1) ptr->Draw("SAME");
+  if (i<2) ptr->Draw("SAME");
   if (i==2) ptw->Draw("SAME");
   canva->Update();
 
   canva->cd(3);
-  gPad->SetBottomMargin(0.11);
+  gPad->SetBottomMargin(0.15);
   h_2pi_1->Draw("*H");
   h_2pi_2->Draw("*H SAME");
-  if (i==1) pts->Draw("SAME");
+  if (i<2) pts->Draw("SAME");
   if (i==2) pte->Draw("SAME");
   canva->Update();
 
-
+ 
   
   canva->SaveAs(pdfname.c_str(),"pdf");
   canva->Close();
@@ -165,11 +163,11 @@ void superimpose_tbins()
 {
 
   //Import the files with histograms made out of our data
-  const char *datafilename01 = "correlations_data_spring2017_precuts_diffpipluscut_fourpionscut_piminuscut.root";
-  const char *datafilename02 = "correlations_data_spring2017_precuts_diffpipluscut_deltacut_fourpionscut_piminuscut.root";
+  const char *datafilename01 = "correlations_data_spring2017_allcuts_nodeltacut.root";
+  const char *datafilename02 = "correlations_data_spring2017_allcuts.root";
 
-  const char *datafilename1 = "correlations_data_spring2017_chi2_precuts_diffpipluscut_fourpionscut_piminuscut.root";
-  const char *datafilename2 = "correlations_data_spring2017_chi2_precuts_diffpipluscut_deltacut_fourpionscut_piminuscut.root";
+  const char *datafilename1 = "correlations_data_spring2017_rfsubtr_allcuts_nodeltacut.root";
+  const char *datafilename2 = "correlations_data_spring2017_rfsubtr_allcuts.root";
                               
  TFile *datafile01 = TFile::Open(datafilename01,"READ");
  TFile *datafile02 = TFile::Open(datafilename02,"READ");
@@ -183,7 +181,7 @@ void superimpose_tbins()
 
 
 
-  TH2D *h2d_data_ppip_mass_subtr =  (TH2D*) datafile01->Get("ProtonPiplus2_mass_vs_minust");
+  TH2D *h2d_data_ppip_mass_subtr =  (TH2D*) datafile01->Get("ProtonPiplusL_mass_vs_minust");
   TH2D *h2d_data_2pi_mass_subtr = (TH2D*) datafile02->Get("PiplusUPiminus_mass_vs_minust");
   TH2D *h2d_data_3pi_mass_subtr = (TH2D*) datafile02->Get("PiplusUPiminusPiminus_mass_vs_minust");
 
@@ -205,6 +203,7 @@ void superimpose_tbins()
 
 
   gStyle->SetOptStat(0);
+  gStyle->SetTitleFontSize(0.08);
   
      for (int i=0; i<6; i++){
 
@@ -219,7 +218,18 @@ void superimpose_tbins()
 
        draw_bin(hdata_ppip_mass_subtr[i],hdata_ppip_mass_hybrid[i],hdata_3pi_mass_subtr[i],hdata_3pi_mass_hybrid[i],hdata_2pi_mass_subtr[i],hdata_2pi_mass_hybrid[i],trange[i],i);
 
-       
+
+       /*       
+       std::cout << "Recoil mass (simple subtraction) in the bin No " << i << ":\t" << hdata_ppip_mass_subtr[i]->GetEntries() << "\t" << hdata_ppip_mass_subtr[i]->GetXaxis()->GetBinWidth(1) << std::endl;
+       std::cout << "Recoil mass (hybrid subtraction) in the bin No " << i << ":\t" << hdata_ppip_mass_hybrid[i]->GetEntries() << "\t" << hdata_ppip_mass_hybrid[i]->GetXaxis()->GetBinWidth(1) << std::endl << std::endl;
+
+       std::cout << "2pi mass (simple subtraction) in the bin No " << i << ":\t" << hdata_2pi_mass_subtr[i]->GetEntries() << "\t" << hdata_2pi_mass_subtr[i]->GetXaxis()->GetBinWidth(1) << std::endl;
+       std::cout << "2pi mass (hybrid subtraction) in the bin No " << i << ":\t" << hdata_2pi_mass_hybrid[i]->GetEntries() << "\t" << hdata_2pi_mass_hybrid[i]->GetXaxis()->GetBinWidth(1) << std::endl << std::endl;
+
+       std::cout << "3pi mass (simple subtraction) in the bin No " << i << ":\t" << hdata_3pi_mass_subtr[i]->GetEntries() << "\t" << hdata_3pi_mass_subtr[i]->GetXaxis()->GetBinWidth(1) << std::endl;
+       std::cout << "3pi mass (hybrid subtraction) in the bin No " << i << ":\t" << hdata_3pi_mass_hybrid[i]->GetEntries() << "\t" << hdata_3pi_mass_hybrid[i]->GetXaxis()->GetBinWidth(1) << std::endl << std::endl;
+       */
+             
      }
    
 

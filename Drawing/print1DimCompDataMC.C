@@ -36,7 +36,7 @@ void setstyle(TH1D *dhisto, TH1D *mchisto, TLegend *leg)
 {
 
     leg->AddEntry(dhisto,"  Data","p");
-    leg->AddEntry(mchisto,"  MC sig","l");
+    leg->AddEntry(mchisto,"  MC PhSp","l");
     
     dhisto->Scale(1./dhisto->GetMaximum());
     mchisto->Scale(1./mchisto->GetMaximum());
@@ -81,8 +81,8 @@ void print1DimCompDataMC()
 {
 
 
-  const char *datafilename = "Different_com_cuts/histos_data_spring2017_precuts_diffpipluscut_deltacut_fourpionscut_3picomcut1p0.root";
-  const char *mcfilename = "Different_com_cuts/histos_mcw_spring2017_precuts_diffpipluscut_deltacut_fourpionscut_3picomcut1p0.root";
+  const char *datafilename = "Histos2026/histos_data_spring2017_allcuts.root";
+  const char *mcfilename = "Histos2026/histos_mc_spring2017_allcuts.root";
   Double_t posl,posr;
   
    

@@ -27,10 +27,12 @@ setenv argRunRangeC ${14}
 
 setenv argFitResDir ${15}
 setenv argLinksDir ${16}
-setenv argtLow ${17}
-setenv argtHigh ${18}
-setenv argM3PiLow ${19}
-setenv argM3PiHigh ${20}
+
+setenv argtbin ${17}
+setenv argtLow ${18}
+setenv argtHigh ${19}
+setenv argM3PiLow ${20}
+setenv argM3PiHigh ${21}
 
 
 
@@ -47,12 +49,13 @@ ls -lhtr *.fit *.ni
 
 
 # Define subrange 
-set subrange = `printf "tbin0_m3pi_%.3f_%.3f" ${argM3PiLow} ${argM3PiHigh}`
+set subrange = `printf "tbin%d_m3pi_%.3f_%.3f" ${argtbin} ${argM3PiLow} ${argM3PiHigh}`
 echo "Running plotter for the ${subrange} bin:"
 
 
 #Call plotter for the best converged fit result
-isops_plotter fit_3PiDelta_${subrange}.fit -o isops_histos_${subrange}.root -t isops_fitpars_${subrange}.txt
+#isops_plotter fit_3PiDelta_${subrange}.fit -o isops_histos_${subrange}.root -t isops_fitpars_${subrange}.txt
+isops_plotter fit_3PiDelta_${subrange}.fit -t isops_fitpars_${subrange}.txt
 
 
 

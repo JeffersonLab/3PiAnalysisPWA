@@ -37,35 +37,42 @@ void loopdir() {
 
 
 
-void setstyle(TH1D *dhisto, TH1D *mchisto, TGraph *gred)
+void setstyle(TH1D *dhisto, TH1D *dhisto2, TGraph *gred)
 {
     
     
-    dhisto->SetMarkerSize(0.5);
-    dhisto->SetMarkerStyle(20);
     dhisto->SetTitleOffset(0.9,"X");
     dhisto->SetTitleSize(0.06,"X");
-    dhisto->SetTitleOffset(1.2,"Y");
-    dhisto->SetTitleSize(0.04,"Y"); 
-    dhisto->SetLineColor(kBlack);
-    dhisto->SetLineWidth(2);    
-    dhisto->SetFillColor(kBlack);
-    dhisto->SetFillStyle(0);//3016
+    dhisto->SetTitleOffset(0.9,"Y");
+    dhisto->SetTitleSize(0.05,"Y"); 
+    dhisto->GetXaxis()->SetLabelSize(0.04);
+    dhisto->GetYaxis()->SetLabelSize(0.04);
 
+
+    dhisto->SetMarkerSize(0.5);
+    dhisto->SetMarkerStyle(20);
+    dhisto->SetLineWidth(2);
+    dhisto->SetFillStyle(3005);  //1001     
+    dhisto->SetMarkerColor(kMagenta+2);
+    dhisto->SetLineColor(kMagenta+2);    
+    dhisto->SetFillColor(kMagenta-10);
     
     
-    mchisto->SetMarkerSize(0.5);
-    mchisto->SetMarkerStyle(20);
-    mchisto->SetMarkerColor(kRed+2);
-    mchisto->SetTitleOffset(0.9,"X");
-    mchisto->SetTitleSize(0.05,"X");
-    mchisto->SetTitleOffset(1.2,"Y");
-    mchisto->SetTitleSize(0.04,"Y"); 
-    mchisto->SetLineColor(kRed+2);
-    mchisto->SetLineWidth(2);    
-    mchisto->SetFillColor(kRed+2);
-    mchisto->SetFillStyle(3016);//3002
+    dhisto2->SetTitleOffset(0.9,"X");
+    dhisto2->SetTitleSize(0.06,"X");
+    dhisto2->SetTitleOffset(0.9,"Y");
+    dhisto2->SetTitleSize(0.05,"Y"); 
+    dhisto2->GetXaxis()->SetLabelSize(0.04);
+    dhisto2->GetYaxis()->SetLabelSize(0.04);
 
+
+    dhisto2->SetMarkerSize(0.5);
+    dhisto2->SetMarkerStyle(20);
+    dhisto2->SetLineWidth(2);
+    dhisto2->SetFillStyle(3004);  
+    dhisto2->SetMarkerColor(kRed+2);
+    dhisto2->SetLineColor(kRed+2);    
+    dhisto2->SetFillColor(kRed-10);    
     
     
 }
@@ -80,8 +87,10 @@ void printCutImpact()
 {
 
 
-  const char *data1filename = "histos_data_spring2017_precuts_diffpipluscut_deltacut_piminuscut.root";
-  const char *data2filename = "histos_data_spring2017_precuts_diffpipluscut_deltacut_fourpionscut_piminuscut.root";
+  const char *data1filename = "GenAmpHistos/Diff_tslopes/thrown_3PiDelta_36waves_pi0_a1_a2_pi2__mask000_tslope_99.0__upd_histogrammed.root";
+  const char *data2filename = "GenAmpHistos/Diff_tslopes/thrown_3PiDelta_36waves_pi0_a1_a2_pi2__mask000_tslope_99.0_symm__upd_histogrammed.root";
+
+  
   Double_t posl,posr;
   
    
@@ -90,7 +99,7 @@ void printCutImpact()
    if (!data1file || !data2file) return;
 
    
-   std::string variables[25] = {"minustvar","Piminus1Proton_M","Piminus2Proton_M","PiplusLPiplusUPiminus1_M","PiplusLPiplusUPiminus2_M","ProtonPiplusUPiminus1_M","ProtonPiplusUPiminus2_M","ProtonPiplusLPiminus1_M","ProtonPiplusLPiminus2_M","ProtonPiplusUPiminus1Piminus2_M","ProtonPiplusLPiminus1Piminus2_M","ProtonPiplusLPiplusUPiminus1_M","ProtonPiplusLPiplusUPiminus2_M","DeltaPhi_LV_UV","DeltaTheta_LV_UV","Miss_M2","PiplusL_P","Piminus2_Pz","PiplusLPiminus1_M","PiplusLPiminus2_M","PiplusLProton_M","PiplusUPiminus1_M","PiplusUPiminus2_M","PiplusUPiminus1Piminus2_M","FourPions_M"};
+   std::string variables[28] = {"minustvar","Mass_3pi","Mass_2pi","Mass_ppip","Piminus1Proton_M","Piminus2Proton_M","PiplusLPiplusUPiminus1_M","PiplusLPiplusUPiminus2_M","ProtonPiplusUPiminus1_M","ProtonPiplusUPiminus2_M","ProtonPiplusLPiminus1_M","ProtonPiplusLPiminus2_M","ProtonPiplusUPiminus1Piminus2_M","ProtonPiplusLPiminus1Piminus2_M","ProtonPiplusLPiplusUPiminus1_M","ProtonPiplusLPiplusUPiminus2_M","DeltaPhi_LV_UV","DeltaTheta_LV_UV","Miss_M2","PiplusL_P","Piminus2_Pz","PiplusLPiminus1_M","PiplusLPiminus2_M","PiplusLProton_M","PiplusUPiminus1_M","PiplusUPiminus2_M","PiplusUPiminus1Piminus2_M","FourPions_M"};
    std::string outpdf;
 
    
@@ -98,18 +107,25 @@ void printCutImpact()
    TH1D *var_datacut = new TH1D();
 
   
-   for (int i=24; i<25; i++){
+   for (int i=0; i<4; i++){
    
      const char *title = variables[i].c_str();      
-     outpdf = "ShowImpact/pic_"+variables[i]+".pdf";
+     //     outpdf = "ShowImpact/pic_"+variables[i]+".pdf"; 
+     outpdf = "Gen_PWs/pic_"+variables[i]+".pdf"; 
 
+     
  
      var_data = (TH1D*)data1file->TFile::Get(title);
      var_datacut = (TH1D*)data2file->TFile::Get(title);
 
 
      //write latex-style captions to the axis     
-     if (variables[i]=="minustvar")                var_data->GetXaxis()->SetTitle("-t  [GeV^{2}]");
+     if (variables[i]=="minustvar")              var_data->GetXaxis()->SetTitle("-t  [GeV^{2}]");
+     if (variables[i]=="Mass_3pi"){              var_data->GetXaxis()->SetTitle("m(3#pi)  [GeV]"); var_data->GetXaxis()->SetRangeUser(0.5,2.5);}
+     if (variables[i]=="Mass_2pi"){              var_data->GetXaxis()->SetTitle("m(2#pi)  [GeV]"); var_data->GetXaxis()->SetRangeUser(0.0,1.8);}
+     if (variables[i]=="Mass_ppip"){             var_data->GetXaxis()->SetTitle("m(p#pi^{+})  [GeV]"); var_data->GetXaxis()->SetRangeUser(0.8,2.5);}
+
+
      if (variables[i]=="Piminus1Proton_M")         var_data->GetXaxis()->SetTitle("m(p#pi^{-}_{fast})  [GeV]");
      if (variables[i]=="Piminus2Proton_M")         var_data->GetXaxis()->SetTitle("m(p#pi^{-}_{slow})  [GeV]");
      if (variables[i]=="PiplusLPiplusUPiminus1_M") var_data->GetXaxis()->SetTitle("m(#pi^{+}#pi^{+}#pi^{-}_{fast})  [GeV]");
@@ -158,26 +174,55 @@ void printCutImpact()
 
 
      TLegend *leg = new TLegend(posl,0.75,posr,0.9); //0.74, 0.75
+     leg->AddEntry(var_data,"  Symm off","lpf");
+     leg->AddEntry(var_datacut,"  Symm on","lpf");
+
+
+       
      setstyle(var_data,var_datacut,gfill);      
      gStyle->SetOptStat(0);
 
-
+     
      
      TCanvas* canva = new TCanvas(title,title,15,10,400,300);
      //    gPad->SetLogy();
      //    var_data->SetMinimum(100.);
      gPad->SetBottomMargin(0.12);
-     var_data->Draw("*H"); 
-     var_datacut->Draw("*H F SAME");
+     var_data->Draw("P");
+     var_data->Draw("H SAME");
+     var_datacut->Draw("P SAME");
+     var_datacut->Draw("H SAME");
+     leg->Draw("SAME");
 
-     //       if (variables[i]=="FourPions_M"){
-     //       gPad->Update();	 
-     //       TLine *cutrange = new TLine(1.8,0.,1.8,gPad->GetUymax());
-     //       cutrange->SetLineColor(kRed); cutrange->SetLineWidth(3); cutrange->SetLineStyle(kDashed);
-     //       cutrange->Draw("SAME");
-     //       }
 
-       //     gfill->Draw("same,lf");   
+     if (variables[i]=="Mass_3pi")
+     {
+       gPad->Update();
+       TLine *vline_a1 = new TLine(1.15,0.,1.15,gPad->GetUymax());
+       TLine *vline_pi0 = new TLine(1.30,0.,1.30,gPad->GetUymax());
+       TLine *vline_a2 = new TLine(1.32,0.,1.32,gPad->GetUymax());
+       TLine *vline_pi2 = new TLine(1.72,0.,1.72,gPad->GetUymax());    
+       vline_a1->SetLineColor(kRed); vline_a1->SetLineWidth(2); vline_a1->SetLineStyle(kDotted);
+       vline_a2->SetLineColor(kRed); vline_a2->SetLineWidth(2); vline_a2->SetLineStyle(kDotted);
+       vline_pi0->SetLineColor(kRed); vline_pi0->SetLineWidth(2); vline_pi0->SetLineStyle(kDotted);
+       vline_pi2->SetLineColor(kRed); vline_pi2->SetLineWidth(2); vline_pi2->SetLineStyle(kDotted);   
+
+
+       vline_pi0->Draw("SAME");
+       vline_pi2->Draw("SAME");
+       vline_a1->Draw("SAME");
+       vline_a2->Draw("SAME");
+     }
+
+     
+     //      if (variables[i]=="FourPions_M"){
+     //      gPad->Update();	 
+     //      TLine *cutrange = new TLine(1.8,0.,1.8,gPad->GetUymax());
+     //      cutrange->SetLineColor(kRed); cutrange->SetLineWidth(3); cutrange->SetLineStyle(kDashed);
+     //      cutrange->Draw("SAME");
+     //      }
+
+     //      gfill->Draw("same,lf");   
 
 
      

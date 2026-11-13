@@ -41,8 +41,8 @@ void setstyle(TH1D *dhisto, TH1D *dhistocut, TH1D *dhistocut2nd)
     
     dhisto->SetMarkerSize(0.5);
     dhisto->SetMarkerStyle(20);
-    dhisto->SetTitleOffset(0.9,"X");
-    dhisto->SetTitleSize(0.06,"X");
+    dhisto->SetTitleOffset(0.8,"X");
+    dhisto->SetTitleSize(0.1,"X"); //0.06
     dhisto->SetTitleOffset(1.2,"Y");
     dhisto->SetTitleSize(0.04,"Y"); 
     dhisto->SetLineColor(kBlack);
@@ -92,12 +92,14 @@ void printTwoCutsImpact()
 {
 
 
-  const char *data1filename = "histos_data_spring2017_precuts_diffpipluscut_deltacut.root";
+  const char *data1filename = "Histos2025/histos_data_spring2017_precuts_diffpipluscut_deltacut.root";
   //const char *data2filename = "histos_data_spring2017_precuts_diffpipluscut_deltacut_fourpionscut.root";
-  const char *data2filename = "histos_data_spring2017_precuts_diffpipluscut_deltacut_piminuscut.root";
-  const char *data3filename = "histos_data_spring2017_precuts_diffpipluscut_deltacut_fourpionscut_piminuscut.root";
+  const char *data2filename = "Histos2025/histos_data_spring2017_precuts_diffpipluscut_deltacut_piminuscut.root";
+  const char *data3filename = "Histos2025/histos_data_spring2017_precuts_diffpipluscut_deltacut_fourpionscut_piminuscut.root";
 
 
+
+  
   
   Double_t posl,posr;
 
@@ -116,7 +118,7 @@ void printTwoCutsImpact()
    TH1D *var_data = new TH1D();
    TH1D *var_datacut = new TH1D();
    TH1D *var_datacut2nd = new TH1D();
-
+ 
   
    for (int i=0; i<25; i++){
    
@@ -135,15 +137,15 @@ void printTwoCutsImpact()
      if (variables[i]=="Piminus2Proton_M")         var_data->GetXaxis()->SetTitle("m(p#pi^{-}_{slow})  [GeV]");
      if (variables[i]=="PiplusLPiplusUPiminus1_M") var_data->GetXaxis()->SetTitle("m(#pi^{+}#pi^{+}#pi^{-}_{fast})  [GeV]");
      if (variables[i]=="PiplusLPiplusUPiminus2_M")  var_data->GetXaxis()->SetTitle("m(#pi^{+}#pi^{+}#pi^{-}_{slow})  [GeV]");
-     if (variables[i]=="ProtonPiplusUPiminus1_M")  var_data->GetXaxis()->SetTitle("m(p#pi^{+}(uv)#pi^{-}_{fast})  [GeV]");
-     if (variables[i]=="ProtonPiplusUPiminus2_M")  var_data->GetXaxis()->SetTitle("m(p#pi^{+}(uv)#pi^{-}_{slow})  [GeV]");
-     if (variables[i]=="ProtonPiplusLPiminus1_M")  var_data->GetXaxis()->SetTitle("m(p#pi^{+}(lv)#pi^{-}_{fast})  [GeV]");
-     if (variables[i]=="ProtonPiplusLPiminus2_M")   var_data->GetXaxis()->SetTitle("m(p#pi^{+}(lv)#pi^{-}_{slow})  [GeV]");
+     if (variables[i]=="ProtonPiplusUPiminus1_M")  var_data->GetXaxis()->SetTitle("m(p#pi^{+}_{fast}#pi^{-}_{fast})  [GeV]");
+     if (variables[i]=="ProtonPiplusUPiminus2_M")  var_data->GetXaxis()->SetTitle("m(p#pi^{+}_{fast}#pi^{-}_{slow})  [GeV]");
+     if (variables[i]=="ProtonPiplusLPiminus1_M")  var_data->GetXaxis()->SetTitle("m(p#pi^{+}_{slow}#pi^{-}_{fast})  [GeV]");
+     if (variables[i]=="ProtonPiplusLPiminus2_M")   var_data->GetXaxis()->SetTitle("m(p#pi^{+}_{slow}#pi^{-}_{slow})  [GeV]");
      if (variables[i]=="ProtonPiplusUPiminus1Piminus2_M"){
-                                                    var_data->GetXaxis()->SetTitle("m(p#pi^{+}(uv)#pi^{-}#pi^{-})  [GeV]");
+                                                    var_data->GetXaxis()->SetTitle("m(p#pi^{+}_{fast}#pi^{-}#pi^{-})  [GeV]");
                                                     var_data->GetXaxis()->SetRangeUser(2.5,4.5);
      }
-     if (variables[i]=="ProtonPiplusLPiminus1Piminus2_M") var_data->GetXaxis()->SetTitle("m(p#pi^{+}(lv)#pi^{-}#pi^{-})  [GeV]");
+     if (variables[i]=="ProtonPiplusLPiminus1Piminus2_M") var_data->GetXaxis()->SetTitle("m(p#pi^{+}_{slow}#pi^{-}#pi^{-})  [GeV]");
      if (variables[i]=="ProtonPiplusLPiplusUPiminus1_M"){
                                                      var_data->GetXaxis()->SetTitle("m(p#pi^{+}#pi^{+}#pi^{-}_{fast})  [GeV]");
                                                      var_data->GetXaxis()->SetRangeUser(1.5,4.5);
@@ -152,17 +154,17 @@ void printTwoCutsImpact()
      if (variables[i]=="FourPions_M"){                    var_data->GetXaxis()->SetTitle("m(4#pi)  [GeV]");
                                                           var_data->GetXaxis()->SetRangeUser(1.0,3.5); 
                                       }
-     if (variables[i]=="PiplusLPiminus1_M")      var_data->GetXaxis()->SetTitle("m(#pi^{+}(lv)#pi^{-}_{fast})  [GeV]");
-     if (variables[i]=="PiplusLPiminus2_M")      var_data->GetXaxis()->SetTitle("m(#pi^{+}(lv)#pi^{-}_{slow})  [GeV]");
+     if (variables[i]=="PiplusLPiminus1_M")      var_data->GetXaxis()->SetTitle("m(#pi^{+}_{slow}#pi^{-}_{fast})  [GeV]");
+     if (variables[i]=="PiplusLPiminus2_M")      var_data->GetXaxis()->SetTitle("m(#pi^{+}_{slow}#pi^{-}_{slow})  [GeV]");
      if (variables[i]=="DeltaPhi_LV_UV")         var_data->GetXaxis()->SetTitle("#Delta#phi(lv-uv)  [deg]");
      if (variables[i]=="DeltaTheta_LV_UV")       var_data->GetXaxis()->SetTitle("#Delta#Theta(lv-uv)  [deg]");
      if (variables[i]=="Miss_M2")                var_data->GetXaxis()->SetTitle("m_{miss}^{2}  [GeV^{2}]");
-     if (variables[i]=="PiplusL_P")              var_data->GetXaxis()->SetTitle("|p(#pi^{+}(lv))|  [GeV]");
+     if (variables[i]=="PiplusL_P")              var_data->GetXaxis()->SetTitle("|p(#pi^{+}_{slow})|  [GeV]");
      if (variables[i]=="Piminus2_Pz")            var_data->GetXaxis()->SetTitle("p_{z}(#pi^{-}_{slow})  [GeV]");
-     if (variables[i]=="PiplusLProton_M")        var_data->GetXaxis()->SetTitle("m(p#pi^{+}(lv))  [GeV]");
-     if (variables[i]=="PiplusUPiminus1_M")      var_data->GetXaxis()->SetTitle("m(#pi^{+}(uv)#pi^{-}_{fast})  [GeV]");
-     if (variables[i]=="PiplusUPiminus2_M")      var_data->GetXaxis()->SetTitle("m(#pi^{+}(uv)#pi^{-}_{slow})  [GeV]");
-    if (variables[i]=="PiplusUPiminus1Piminus2_M")     var_data->GetXaxis()->SetTitle("m(#pi^{+}(uv)#pi^{-}#pi^{-})  [GeV]");
+     if (variables[i]=="PiplusLProton_M")        var_data->GetXaxis()->SetTitle("m(p#pi^{+}_{slow})  [GeV]");
+     if (variables[i]=="PiplusUPiminus1_M")      var_data->GetXaxis()->SetTitle("m(#pi^{+}_{fast}#pi^{-}_{fast})  [GeV]");
+     if (variables[i]=="PiplusUPiminus2_M")      var_data->GetXaxis()->SetTitle("m(#pi^{+}_{fast}#pi^{-}_{slow})  [GeV]");
+     if (variables[i]=="PiplusUPiminus1Piminus2_M")     var_data->GetXaxis()->SetTitle("m(3#pi)  [GeV]"); //"m(#pi^{+}_{fast}#pi^{-}#pi^{-})  [GeV]"
        
  
 
@@ -191,7 +193,9 @@ void printTwoCutsImpact()
      TCanvas* canva = new TCanvas(title,title,15,10,400,300);
      //    gPad->SetLogy();
      //    var_data->SetMinimum(100.);
-     gPad->SetBottomMargin(0.12);
+     TGaxis::SetMaxDigits(3);
+
+     gPad->SetBottomMargin(0.2);
      var_data->Draw("*H"); 
      var_datacut->Draw("*H F SAME");
      var_datacut2nd->Draw("*H F SAME");
@@ -205,6 +209,42 @@ void printTwoCutsImpact()
      
 }
 
+   // From here on, plot the two Isobar masses added up
+   
+   TH1D *var_data_a = (TH1D*)data1file->TFile::Get("PiplusUPiminus1_M");
+   TH1D *var_datacut_a = (TH1D*)data2file->TFile::Get("PiplusUPiminus1_M");
+   TH1D *var_datacut2nd_a = (TH1D*)data3file->TFile::Get("PiplusUPiminus1_M");
+ 
+   TH1D *var_data_b = (TH1D*)data1file->TFile::Get("PiplusUPiminus2_M");
+   TH1D *var_datacut_b = (TH1D*)data2file->TFile::Get("PiplusUPiminus2_M");
+   TH1D *var_datacut2nd_b = (TH1D*)data3file->TFile::Get("PiplusUPiminus2_M");
+
+   var_data_a->Add(var_data_b);
+   var_datacut_a->Add(var_datacut_b);
+   var_datacut2nd_a->Add(var_datacut2nd_b);
+   var_data_a->Scale(0.5);
+   var_datacut_a->Scale(0.5);
+   var_datacut2nd_a->Scale(0.5);
+
+   
+   //   var_data_a->GetXaxis()->SetTitle("m(#pi^{+}_{fast}#pi^{-})  [GeV]");
+   var_data_a->GetXaxis()->SetTitle("m(2#pi)  [GeV]");
+   
+
+   TCanvas* canva = new TCanvas("PiplusUPiminus12_M","PiplusUPiminus12_M",15,10,400,300);
+   gPad->SetBottomMargin(0.12);
+   var_data_a->Draw("*H");
+   var_datacut_a->Draw("*H F SAME");
+   var_datacut2nd_a->Draw("*H F SAME");
+    //     gfill->Draw("same,lf");                                                                                                                                                                           
+
+
+
+     canva->Update();
+     canva->Print("ShowImpact2cuts/pic_PiplusUPiminus12_M.pdf","pdf");                                                                                                                                                              
+     canva->Close();
+
+   
     data1file->Close();
     data2file->Close();
     data3file->Close();

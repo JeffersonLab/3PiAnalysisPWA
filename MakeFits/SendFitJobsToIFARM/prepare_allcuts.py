@@ -16,13 +16,13 @@ import ROOT
 #flattree_2pip2pim__PARA_0_sideband_allcuts.root
 
 
-def linkfiles(DataSampleDir,MCphspSampleDir,FitInputTreesDir,linksDir,runnums,tvar_low,tvar_high,m3pi_low,m3pi_high):
+def linkfiles(DataSampleDir,MCphspSampleDir,FitInputTreesDir,linksDir,runnums,tvar_bin,tvar_low,tvar_high,m3pi_low,m3pi_high):
 
     DataSampleDir = DataSampleDir 
     MCphspSampleAccDir = MCphspSampleDir 
     MCphspSampleThrownDir = MCphspSampleDir 
     #subrange = "tvar_%.3f_%.3f_m3pi_%.3f_%.3f" % (tvar_low,tvar_high,m3pi_low,m3pi_high)
-    subrange = "tbin0_m3pi_%.3f_%.3f" % (m3pi_low,m3pi_high)
+    subrange = "tbin%d_m3pi_%.3f_%.3f" % (tvar_bin,m3pi_low,m3pi_high)
 
     
     #tvar in the trees is always negative, and we pass only positive range values
@@ -65,30 +65,33 @@ def main(argv):
         linksDir = "."
         runnums = "50685_51768"
         
+        tvar_bin = 0
         tvar_low =  0.00
         tvar_high = 0.25
         m3pi_low =  0.825
         m3pi_high = 0.850
 
         
-        parser_usage = "prepare_allcuts.py [9 parameters, each has its default value]"
+        parser_usage = "prepare_allcuts.py [10 parameters, each has its default value]"
         parser = OptionParser(usage = parser_usage)
         (options, args) = parser.parse_args(argv)
 
-        if len(args) == 9:
+        if len(args) == 10:
                 DataSampleDir = args[0]
                 MCphspSampleDir = args[1]
                 FitInputTreesDir = args[2]
                 linksDir = args[3]
                 runnums = args[4]
-                tvar_low = float(args[5])
-                tvar_high = float(args[6]) 
-                m3pi_low = float(args[7])
-                m3pi_high = float(args[8])
+                tvar_bin = int(args[5])
+                tvar_low = float(args[6])
+                tvar_high = float(args[7]) 
+                m3pi_low = float(args[8])
+                m3pi_high = float(args[9])
 
+                
         
         # For a single beamtime, create trees and links to them in the 'FitInputTreesDir' and 'linksDir' directories, respectively
-        linkfiles(DataSampleDir,MCphspSampleDir,FitInputTreesDir,linksDir,runnums,tvar_low,tvar_high,m3pi_low,m3pi_high)
+        linkfiles(DataSampleDir,MCphspSampleDir,FitInputTreesDir,linksDir,runnums,tvar_bin,tvar_low,tvar_high,m3pi_low,m3pi_high)
 
 
 
